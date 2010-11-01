@@ -1,0 +1,16 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+    <l:layout title="BulkBuilder">
+        <l:main-panel>
+            <h1>Bulk Builder</h1>
+            <h3>What would you like to build today?</h3>
+            <p>Queue size: ${it.queueSize}</p>
+            <f:form name="buildAll" action="buildAll" method="post">
+                Build All Jobs:<f:submit name="all" value="Go" />
+            </f:form>
+            <p/>
+            <f:form name="buildFailed" action="buildFailed" method="post">
+                Build Failed Jobs:<f:submit name="all" value="Go" />
+            </f:form>
+	</l:main-panel>
+    </l:layout>
+</j:jelly>
