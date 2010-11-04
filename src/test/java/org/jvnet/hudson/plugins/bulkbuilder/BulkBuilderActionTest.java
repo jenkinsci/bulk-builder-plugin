@@ -1,10 +1,7 @@
-package org.jvnet.hudson.plugins;
+package org.jvnet.hudson.plugins.bulkbuilder;
 
 import com.gargoylesoftware.htmlunit.html.HtmlForm;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import hudson.Launcher;
-import hudson.model.AbstractBuild;
-import hudson.model.BuildListener;
 import hudson.model.Cause;
 import hudson.model.FreeStyleProject;
 import java.io.IOException;
@@ -12,7 +9,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.jvnet.hudson.test.For;
 import org.jvnet.hudson.test.HudsonTestCase;
-import org.jvnet.hudson.test.TestBuilder;
 
 /**
  * @author simon
@@ -51,7 +47,7 @@ public class BulkBuilderActionTest extends HudsonTestCase
         assertStringContains(page.asXml(), "Build All Jobs");
 
         HtmlForm form = page.getFormByName("buildAll");
-//        System.out.println(form.asXml());
+        System.out.println(form.asXml());
         assertEquals("buildAll", form.getActionAttribute());
         assertEquals("post", form.getMethodAttribute());
     }

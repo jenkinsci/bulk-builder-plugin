@@ -1,4 +1,4 @@
-package org.jvnet.hudson.plugins;
+package org.jvnet.hudson.plugins.bulkbuilder;
 
 import hudson.Extension;
 import hudson.model.AbstractProject;
@@ -55,7 +55,6 @@ public class BulkBuilderAction implements RootAction {
             LOGGER.log(Level.INFO, "Scheduling build for job: {0}", project.getDisplayName());
             project.scheduleBuild(new Cause.UserCause());
         }
-
 
         //Computer[] computers = Hudson.getInstance().getComputers();
         //for (Computer c : computers) {
