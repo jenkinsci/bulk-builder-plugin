@@ -41,7 +41,6 @@ public class BulkBuilderActionTest extends HudsonTestCase
         assertEquals("/bulkbuilder", action.getUrlName());
     }
 
-    @Ignore("intermittently failing with 404 error")
     @Test
     public void testBulkBuilderForm() throws Exception {
         HtmlPage page = new WebClient().goTo("/bulkbuilder");
