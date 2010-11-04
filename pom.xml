@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>bulk-builder</artifactId>
-    <version>0.2-snapshot</version>
+    <version>0.2</version>
     <packaging>hpi</packaging>
     <name>Bulk Builder</name>
     <url>http://wiki.hudson-ci.org/display/HUDSON/Bulk+Builder+Plugin</url>
@@ -32,4 +32,10 @@
             <type>jar</type>
         </dependency>
     </dependencies>
+
+  <scm>
+    <connection>scm:svn:https://guest@svn.dev.java.net/svn/hudson/tags/bulk-builder-0.2</connection>
+    <developerConnection>scm:svn:https://svn.dev.java.net/svn/hudson/tags/bulk-builder-0.2</developerConnection>
+    <url>https://hudson.dev.java.net/source/browse/hudson/tags/bulk-builder-0.2</url>
+  </scm>
 </project>
