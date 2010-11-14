@@ -1,19 +1,37 @@
+/*
+ * The MIT License
+ *
+ * Copyright (c) 2010 Simon Westcott
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+
 package org.jvnet.hudson.plugins.bulkbuilder;
 
 import hudson.Extension;
-import hudson.model.AbstractProject;
-import hudson.model.Cause;
 import hudson.model.Hudson;
-import hudson.model.Result;
 import hudson.model.RootAction;
-import hudson.model.Run;
-import hudson.model.TopLevelItem;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
+import org.jvnet.hudson.plugins.bulkbuilder.model.Builder;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 import org.kohsuke.stapler.export.Exported;
@@ -40,76 +58,26 @@ public class BulkBuilderAction implements RootAction {
         return "/bulkbuilder";
     }
 
-    /**
-     * Schedule build of all projects
-     *
-     * @param req
-     * @param rsp
-     * @throws IOException
-     * @throws ServletException
-     */
-    public void doBuildAll(StaplerRequest req, StaplerResponse rsp) throws IOException, ServletException {
-        LOGGER.log(Level.FINE, "doBuildAll action called");
+    //Computer[] computers = Hudson.getInstance().getComputers();
+    //for (Computer c : computers) {
+    //    c.countBusy();
+    //}
 
-        for (AbstractProject project : getProjects()) {
-            LOGGER.log(Level.INFO, "Scheduling build for job: {0}", project.getDisplayName());
-            project.scheduleBuild(new Cause.UserCause());
-        }
+    public void doBuild(StaplerRequest req, StaplerResponse rsp) throws ServletException, IOException {
+        LOGGER.log(Level.FINE, "doBuild action called");
+        String build = req.getParameter("build");
 
-        //Computer[] computers = Hudson.getInstance().getComputers();
-        //for (Computer c : computers) {
-        //    c.countBusy();
-        //}
+        Builder builder = new Builder();
 
-        rsp.forwardToPreviousPage(req);
-    }
-
-    /**
-     * Schedule build of all projects where the last build was not successful
-     *
-     * @param req
-     * @param rsp
-     * @throws IOException
-     * @throws ServletException
-     */
-    public void doBuildFailed(StaplerRequest req, StaplerResponse rsp) throws IOException, ServletException {
-        LOGGER.log(Level.FINE, "doBuildFailed action called");
-
-        for (AbstractProject project : getProjects()) {
-            Run build = project.getLastCompletedBuild();
-
-            if (build == null || build.getResult().isWorseOrEqualTo(Result.FAILURE)) {
-                LOGGER.log(Level.INFO, "Scheduling build for job: {0}", project.getDisplayName());
-                project.scheduleBuild(new Cause.UserCause());
-            }
+        if (build.equalsIgnoreCase("all")) {
+            builder.buildAll();
+        } else if (build.equalsIgnoreCase("failed")) {
+            builder.buildFailed();
+        } else if (build.equalsIgnoreCase("pattern")) {
+            builder.buildPattern(req.getParameter("pattern"));
         }
 
         rsp.forwardToPreviousPage(req);
-    }
-
-    /**
-     * Get list a of projects that can be built
-     *
-     * @return
-     */
-    private List<AbstractProject> getProjects() {
-        List<AbstractProject> projects = new ArrayList<AbstractProject>();
-
-        List<TopLevelItem> topLevelItems = Hudson.getInstance().getItems();
-        for (TopLevelItem topLevelItem : topLevelItems) {
-            if (!(topLevelItem instanceof AbstractProject)) {
-                continue;
-            }
-
-            AbstractProject project = (AbstractProject) topLevelItem;
-            if (!project.isBuildable()) {
-                continue;
-            }
-
-            projects.add(project);
-        }
-
-        return projects;
     }
 
     /**

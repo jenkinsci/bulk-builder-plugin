@@ -4,13 +4,27 @@
             <h1>Bulk Builder</h1>
             <h3>What would you like to build today?</h3>
             <p>Queue size: ${it.queueSize}</p>
-            <f:form name="buildAll" action="buildAll" method="post">
-                Build All Jobs:<f:submit name="all" value="Go" />
+            <f:form name="builder" action="build" method="post">
+                <f:entry name="Build All">
+                    <f:radio id="all" name="build" value="all"/> <label for="all">Build all jobs</label>
+                </f:entry>
+                <f:entry name="Build All">
+                    <f:radio id="failed" name="build" value="failed"/> <label for="failed">Build failed jobs</label>
+                </f:entry>
+                <!--
+                <f:radioBlock name="build" value="pattern">
+                    <f:entry>
+                        Pattern: <f:textbox name="pattern"/>
+                    </f:entry>
+                </f:radioBlock>
+                -->
+                <f:entry name="Build Pattern">
+                    <f:radio id="pattern" name="build" value="pattern"/> <label for="pattern">Build jobs matching pattern:</label> <f:textbox name="pattern" style="width: 200px" clazz="combobox"/>
+                </f:entry>
+                <f:entry name="submit">
+                    <f:submit name="build" value="Build!"/>
+                </f:entry>
             </f:form>
-            <p/>
-            <f:form name="buildFailed" action="buildFailed" method="post">
-                Build Failed Jobs:<f:submit name="all" value="Go" />
-            </f:form>
-	</l:main-panel>
+        </l:main-panel>
     </l:layout>
 </j:jelly>

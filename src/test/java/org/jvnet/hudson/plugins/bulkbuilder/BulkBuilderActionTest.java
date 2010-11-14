@@ -1,12 +1,37 @@
+/*
+ * The MIT License
+ *
+ * Copyright (c) 2010 Simon Westcott
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+
 package org.jvnet.hudson.plugins.bulkbuilder;
 
 import com.gargoylesoftware.htmlunit.html.HtmlForm;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.gargoylesoftware.htmlunit.html.HtmlRadioButtonInput;
 import hudson.model.Cause;
 import hudson.model.FreeStyleProject;
 import java.io.IOException;
+import java.util.List;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.jvnet.hudson.test.For;
 import org.jvnet.hudson.test.HudsonTestCase;
@@ -45,34 +70,22 @@ public class BulkBuilderActionTest extends HudsonTestCase
     public void testBulkBuilderForm() throws Exception {
         HtmlPage page = new WebClient().goTo("/bulkbuilder");
 
-        assertStringContains(page.asXml(), "Build All Jobs");
+        // some text
+        assertStringContains(page.asXml(), "Build all jobs");
+        assertStringContains(page.asXml(), "Build failed jobs");
+        assertStringContains(page.asXml(), "Build jobs matching pattern:");
 
-        HtmlForm form = page.getFormByName("buildAll");
-        System.out.println(form.asXml());
-        assertEquals("buildAll", form.getActionAttribute());
+        // form
+        HtmlForm form = page.getFormByName("builder");
+        assertEquals("build", form.getActionAttribute());
         assertEquals("post", form.getMethodAttribute());
-    }
 
-    @Test
-    public void atestDoBuildAll() {
-        // TODO complete test
-    }
+        // radio group
+        List<HtmlRadioButtonInput> radioButtons = form.getRadioButtonsByName("build");
+        assertEquals(3, radioButtons.size());
 
-    @Test
-    public void testDoBuildFailed() throws Exception {
-//        FreeStyleProject project = createFreeStyleProject("project1");
-//        project.getBuildersList().add(new TestBuilder() {
-
-//            @Override
-//            public boolean perform(AbstractBuild<?, ?> ab, Launcher lnchr, BuildListener bl) throws InterruptedException, IOException {
-//                return false;
-//            }
-//        });
-        //project.scheduleBuild2(0);
-
-//        HtmlPage page = new WebClient().goTo("/bulkbuilder/buildFailed");
-
- //       assertEquals(1, action.getQueueSize());
+        // text box
+        form.getInputByName("pattern");
     }
 
     @Test

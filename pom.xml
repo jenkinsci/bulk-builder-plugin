@@ -15,6 +15,22 @@
     <name>Bulk Builder</name>
     <url>http://wiki.hudson-ci.org/display/HUDSON/Bulk+Builder+Plugin</url>
 
+    <scm>
+        <connection>scm:svn:https://hudson.dev.java.net/svn/hudson/trunk/hudson/plugins/bulk-builder/</connection>
+        <developerConnection>svm:svn:https://hudson.dev.java.net/svn/hudson/trunk/hudson/plugins/bulk-builder/</developerConnection>
+        <url>http://fisheye.hudson-ci.org/browse/Hudson/trunk/hudson/plugins/bulk-builder</url>
+    </scm>
+
+    <ciManagement>
+        <system>Hudson</system>
+        <url>http://ci.hudson-labs.org/job/plugins_bulk-builder/</url>
+    </ciManagement>
+
+    <issueManagement>
+      <system>JIRA</system>
+      <url>http://issues.hudson-ci.org/secure/Dashboard.jspa</url>
+    </issueManagement>
+    
     <developers>
         <developer>
             <id>swestcott</id>
@@ -22,14 +38,14 @@
             <email>swestcott@gmail.com</email>
         </developer>
     </developers>
-
-    <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.8.2</version>
-            <scope>test</scope>
-            <type>jar</type>
-        </dependency>
-    </dependencies>
+    
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>cobertura-maven-plugin</artifactId>
+                <version>2.4</version>
+            </plugin>
+        </plugins>
+    </reporting>
 </project>
