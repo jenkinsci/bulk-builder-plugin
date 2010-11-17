@@ -46,15 +46,15 @@ public class BulkBuilderAction implements RootAction {
 
     private static final Logger LOGGER = Logger.getLogger(BulkBuilderAction.class.getName());
 
-    public String getIconFileName() {
+    public final String getIconFileName() {
         return "/plugin/bulk-builder/icons/builder-32x32.png";
     }
 
-    public String getDisplayName() {
+    public final String getDisplayName() {
         return "Bulk Builder";
     }
 
-    public String getUrlName() {
+    public final String getUrlName() {
         return "/bulkbuilder";
     }
 
@@ -63,7 +63,7 @@ public class BulkBuilderAction implements RootAction {
     //    c.countBusy();
     //}
 
-    public void doBuild(StaplerRequest req, StaplerResponse rsp) throws ServletException, IOException {
+    public final void doBuild(StaplerRequest req, StaplerResponse rsp) throws ServletException, IOException {
         LOGGER.log(Level.FINE, "doBuild action called");
         String build = req.getParameter("build");
 
@@ -86,7 +86,7 @@ public class BulkBuilderAction implements RootAction {
      * @return
      */
     @Exported
-    public int getQueueSize() {
+    public final int getQueueSize() {
         return Hudson.getInstance().getQueue().getItems().length;
     }
 }

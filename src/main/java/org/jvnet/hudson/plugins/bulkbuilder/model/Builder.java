@@ -46,7 +46,7 @@ public class Builder {
     /**
      * Build all Hudson projects
      */
-    public void buildAll() {
+    public final void buildAll() {
 
         LOGGER.log(Level.FINE, "Starting to build all jobs.");
 
@@ -63,7 +63,7 @@ public class Builder {
      * This includes projects that have not been built before and failed and
      * aborted projects.
      */
-    public void buildFailed() {
+    public final void buildFailed() {
 
         LOGGER.log(Level.FINE, "Starting to build failed jobs.");
 
@@ -84,7 +84,7 @@ public class Builder {
      *
      * @param pattern
      */
-    public void buildPattern(String pattern) {
+    public final void buildPattern(String pattern) {
 
         LOGGER.log(Level.FINE, "Starting to jobs matching pattern, '{0}'.", pattern);
 
@@ -102,7 +102,7 @@ public class Builder {
      * 
      * @return
      */
-    protected List<AbstractProject> getProjects() {
+    protected final List<AbstractProject> getProjects() {
         
         List<AbstractProject> projects = new ArrayList<AbstractProject>();
 
