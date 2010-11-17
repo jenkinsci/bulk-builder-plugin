@@ -40,7 +40,7 @@ import org.kohsuke.stapler.export.ExportedBean;
 /**
  * @author simon
  */
-@ExportedBean(defaultVisibility = 999)
+@ExportedBean
 @Extension
 public class BulkBuilderAction implements RootAction {
 
