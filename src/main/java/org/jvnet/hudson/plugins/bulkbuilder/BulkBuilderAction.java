@@ -51,7 +51,7 @@ public class BulkBuilderAction implements RootAction {
     }
 
     public final String getDisplayName() {
-        return "Bulk Builder";
+        return Messages.Plugin_Title();
     }
 
     public final String getUrlName() {
