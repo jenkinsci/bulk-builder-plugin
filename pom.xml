@@ -10,15 +10,15 @@
     </parent>
 
     <artifactId>bulk-builder</artifactId>
-    <version>0.3</version>
+    <version>0.4-SNAPSHOT</version>
     <packaging>hpi</packaging>
     <name>Bulk Builder</name>
     <url>http://wiki.hudson-ci.org/display/HUDSON/Bulk+Builder+Plugin</url>
 
     <scm>
-        <connection>scm:svn:https://hudson.dev.java.net/svn/hudson/tags/bulk-builder-0.3</connection>
-        <developerConnection>svm:svn:https://hudson.dev.java.net/svn/hudson/tags/bulk-builder-0.3</developerConnection>
-        <url>http://fisheye.hudson-ci.org/browse/Hudson/tags/bulk-builder-0.3</url>
+        <connection>scm:svn:https://hudson.dev.java.net/svn/hudson/trunk/hudson/plugins/bulk-builder/</connection>
+        <developerConnection>svm:svn:https://hudson.dev.java.net/svn/hudson/trunk/hudson/plugins/bulk-builder/</developerConnection>
+        <url>http://fisheye.hudson-ci.org/browse/Hudson/trunk/hudson/plugins/bulk-builder</url>
     </scm>
 
     <ciManagement>
