@@ -28,10 +28,13 @@ import hudson.Extension;
 import hudson.model.Hudson;
 import hudson.model.RootAction;
 import java.io.IOException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import org.jvnet.hudson.plugins.bulkbuilder.model.Builder;
+import org.jvnet.hudson.plugins.bulkbuilder.model.BuildHistory;
+import org.jvnet.hudson.plugins.bulkbuilder.model.BuildHistoryItem;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 import org.kohsuke.stapler.export.Exported;
@@ -65,6 +68,7 @@ public class BulkBuilderAction implements RootAction {
 
     public final void doBuild(StaplerRequest req, StaplerResponse rsp) throws ServletException, IOException {
         LOGGER.log(Level.FINE, "doBuild action called");
+
         String build = req.getParameter("build");
 
         Builder builder = new Builder();
@@ -74,9 +78,12 @@ public class BulkBuilderAction implements RootAction {
         } else if (build.equalsIgnoreCase("failed")) {
             builder.buildFailed();
         } else if (build.equalsIgnoreCase("pattern")) {
-            builder.buildPattern(req.getParameter("pattern"));
+            String pattern = req.getParameter("pattern");
+            builder.buildPattern(pattern);
+            BuildHistory history = Hudson.getInstance().getPlugin(BuildHistory.class);
+            history.add(new BuildHistoryItem(pattern));
         }
-
+        
         rsp.forwardToPreviousPage(req);
     }
 
@@ -88,5 +95,10 @@ public class BulkBuilderAction implements RootAction {
     @Exported
     public final int getQueueSize() {
         return Hudson.getInstance().getQueue().getItems().length;
+    }
+
+    @Exported
+    public final List<BuildHistoryItem> getHistory() {
+        return Hudson.getInstance().getPlugin(BuildHistory.class).getAll();
     }
 }

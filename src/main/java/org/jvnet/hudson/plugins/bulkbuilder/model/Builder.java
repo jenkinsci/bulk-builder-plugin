@@ -46,15 +46,20 @@ public class Builder {
     /**
      * Build all Hudson projects
      */
-    public final void buildAll() {
+    public final int buildAll() {
 
         LOGGER.log(Level.FINE, "Starting to build all jobs.");
 
+        int i = 0;
+
         for (AbstractProject project : getProjects()) {
             project.scheduleBuild(new Cause.UserCause());
+            i++;
         }
 
         LOGGER.log(Level.FINE, "Finished building all jobs.");
+
+        return i;
     }
 
     /**
@@ -63,9 +68,11 @@ public class Builder {
      * This includes projects that have not been built before and failed and
      * aborted projects.
      */
-    public final void buildFailed() {
+    public final int buildFailed() {
 
         LOGGER.log(Level.FINE, "Starting to build failed jobs.");
+
+        int i = 0;
 
         for (AbstractProject project : getProjects()) {
             Run build = project.getLastCompletedBuild();
@@ -73,10 +80,13 @@ public class Builder {
             if (build == null || build.getResult().isWorseOrEqualTo(Result.FAILURE)) {
                 LOGGER.log(Level.FINE, "Scheduling build for job: {0}", project.getDisplayName());
                 project.scheduleBuild(new Cause.UserCause());
+                i++;
             }
         }
 
         LOGGER.log(Level.FINE, "Finished building failed jobs.");
+
+        return i;
     }
 
     /**
@@ -84,17 +94,22 @@ public class Builder {
      *
      * @param pattern
      */
-    public final void buildPattern(String pattern) {
+    public final int buildPattern(String pattern) {
 
         LOGGER.log(Level.FINE, "Starting to jobs matching pattern, '{0}'.", pattern);
+
+        int i = 0;
 
         for (AbstractProject project : getProjects()) {
             if (project.getDisplayName().contains(pattern)) {
                 project.scheduleBuild(new Cause.UserCause());
+                i++;
             }
         }
 
         LOGGER.log(Level.FINE, "Finished building jobs matching pattern.");
+
+        return i;
     }
 
     /**
