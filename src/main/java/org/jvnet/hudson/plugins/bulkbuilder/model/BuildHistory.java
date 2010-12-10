@@ -36,7 +36,7 @@ public class BuildHistory extends Plugin {
     /**
      * Size of the history to maintain
      */
-    final static Integer SIZE = 10;
+    public static final Integer SIZE = 10;
 
     /**
      * History list
@@ -60,7 +60,7 @@ public class BuildHistory extends Plugin {
      *
      * @return
      */
-    public List<BuildHistoryItem> getAll() {
+    public final List<BuildHistoryItem> getAll() {
         return items;
     }
 
@@ -69,14 +69,14 @@ public class BuildHistory extends Plugin {
      *
      * @return
      */
-    public int size() {
+    public final int size() {
         return items.size();
     }
 
     /**
      * Remove all items from build history
      */
-    public void clear() {
+    public final void clear() {
         items.clear();
     }
 }
