@@ -16,9 +16,9 @@
     <url>http://wiki.hudson-ci.org/display/HUDSON/Bulk+Builder+Plugin</url>
 
     <scm>
-        <connection>scm:svn:https://svn.java.net/svn/hudson~svn/trunk/hudson/plugins/bulk-builder/</connection>
-        <developerConnection>svm:svn:https://svn.java.net/svn/hudson~svn/trunk/hudson/plugins/bulk-builder/</developerConnection>
-        <url>http://fisheye.hudson-ci.org/browse/Hudson/trunk/hudson/plugins/bulk-builder</url>
+        <connection>scm:git:git://github.com/hudson/bulk-builder-plugin.git</connection>
+        <developerConnection>scm:git:git://github.com/hudson/bulk-builder-plugin.git</developerConnection>
+        <url>https://github.com/hudson/bulk-builder-plugin</url>
     </scm>
 
     <ciManagement>
@@ -48,7 +48,6 @@
             </plugin>
             <plugin>
                 <artifactId>maven-release-plugin</artifactId>
-                <version>2.0-beta-9</version>
                 <configuration>
                     <goals>deploy</goals>
                 </configuration>
