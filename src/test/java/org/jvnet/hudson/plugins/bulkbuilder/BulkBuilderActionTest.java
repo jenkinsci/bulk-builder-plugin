@@ -24,6 +24,8 @@
 
 package org.jvnet.hudson.plugins.bulkbuilder;
 
+import com.gargoylesoftware.htmlunit.Page;
+import com.gargoylesoftware.htmlunit.html.HtmlButton;
 import com.gargoylesoftware.htmlunit.html.HtmlForm;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.html.HtmlRadioButtonInput;
@@ -67,7 +69,7 @@ public class BulkBuilderActionTest extends HudsonTestCase
     }
 
     @Test
-    public void testBulkBuilderForm() throws Exception {
+    public void testFormElementsPresent() throws Exception {
         HtmlPage page = new WebClient().goTo("/bulkbuilder");
 
         // some text
@@ -82,10 +84,34 @@ public class BulkBuilderActionTest extends HudsonTestCase
 
         // radio group
         List<HtmlRadioButtonInput> radioButtons = form.getRadioButtonsByName("build");
+
         assertEquals(3, radioButtons.size());
 
         // text box
         form.getInputByName("pattern");
+    }
+
+    //@Test
+    public void testFormSubmitBuildAll() throws Exception {
+        HtmlPage page = new WebClient().goTo("/bulkbuilder");
+
+        HtmlForm form = page.getFormByName("builder");
+
+        List<HtmlRadioButtonInput> radioButtons = form.getRadioButtonsByName("build");
+        for (HtmlRadioButtonInput radioButton : radioButtons) {
+            if (radioButton.getValueAttribute().equalsIgnoreCase("all")) {
+                radioButton.setChecked(true);
+            }
+        }
+
+        HtmlButton submitButton = form.getButtonByCaption("Build!");
+
+        FreeStyleProject project1 = createFreeStyleProject("project1");
+        FreeStyleProject project2 = createFreeStyleProject("project2");
+        // Click that button!
+        Page click = submitButton.click();
+
+        assertEquals(2, action.getQueueSize());
     }
 
     @Test

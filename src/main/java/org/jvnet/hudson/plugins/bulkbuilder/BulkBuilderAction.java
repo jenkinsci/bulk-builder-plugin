@@ -28,6 +28,7 @@ import hudson.Extension;
 import hudson.model.Hudson;
 import hudson.model.RootAction;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,6 +36,7 @@ import javax.servlet.ServletException;
 import org.jvnet.hudson.plugins.bulkbuilder.model.Builder;
 import org.jvnet.hudson.plugins.bulkbuilder.model.BuildHistory;
 import org.jvnet.hudson.plugins.bulkbuilder.model.BuildHistoryItem;
+import org.jvnet.hudson.plugins.bulkbuilder.model.BulkParamProcessor;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 import org.kohsuke.stapler.export.Exported;
@@ -65,8 +67,10 @@ public class BulkBuilderAction implements RootAction {
         LOGGER.log(Level.FINE, "doBuild action called");
 
         String build = req.getParameter("build");
+        String params = req.getParameter("params");
 
-        Builder builder = new Builder();
+        BulkParamProcessor processor = new BulkParamProcessor(params);
+        Builder builder = new Builder(processor.getProjectParams());
 
         if (build.equalsIgnoreCase("all")) {
             builder.buildAll();
@@ -92,6 +96,11 @@ public class BulkBuilderAction implements RootAction {
         return Hudson.getInstance().getQueue().getItems().length;
     }
 
+    /**
+     * Gets the build pattern history
+     *
+     * @return
+     */
     @Exported
     public final List<BuildHistoryItem> getHistory() {
         return Hudson.getInstance().getPlugin(BuildHistory.class).getAll();
