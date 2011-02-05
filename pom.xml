@@ -30,7 +30,7 @@ THE SOFTWARE.
     <parent>
         <groupId>org.jvnet.hudson.plugins</groupId>
         <artifactId>plugin</artifactId>
-        <version>1.382</version>
+        <version>1.388</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -38,7 +38,7 @@ THE SOFTWARE.
     <version>0.6-SNAPSHOT</version>
     <packaging>hpi</packaging>
     <name>Bulk Builder</name>
-    <url>http://wiki.hudson-ci.org/display/HUDSON/Bulk+Builder+Plugin</url>
+    <url>http://wiki.jenkins-ci.org/display/JENKINS/Bulk+Builder+Plugin</url>
 
     <licenses>
         <license>
@@ -48,19 +48,19 @@ THE SOFTWARE.
     </licenses>
 
     <scm>
-        <connection>scm:git:git://github.com/hudson/bulk-builder-plugin.git</connection>
-        <developerConnection>scm:git:git://github.com/hudson/bulk-builder-plugin.git</developerConnection>
-        <url>https://github.com/hudson/bulk-builder-plugin</url>
+        <connection>scm:git:git://github.com/jenkinsci/bulk-builder-plugin.git</connection>
+        <developerConnection>scm:git:git://github.com/jenkins/bulk-builder-plugin.git</developerConnection>
+        <url>https://github.com/jenkins/bulk-builder-plugin</url>
     </scm>
 
     <ciManagement>
         <system>Hudson</system>
-        <url>http://ci.hudson-labs.org/job/plugins_bulk-builder/</url>
+        <url>http://ci.jenkins-ci.org/job/plugins_bulk-builder/</url>
     </ciManagement>
 
     <issueManagement>
       <system>JIRA</system>
-      <url>http://issues.hudson-ci.org/secure/Dashboard.jspa</url>
+      <url>http://issues.jenkins-ci.org/secure/Dashboard.jspa</url>
     </issueManagement>
     
     <developers>
@@ -86,4 +86,11 @@ THE SOFTWARE.
             </plugin>
         </plugins>
     </reporting>
+
+    <distributionManagement>
+        <repository>
+            <id>maven.jenkins-ci.org</id>
+            <url>http://maven.jenkins-ci.org:8081/content/repositories/releases/</url>
+        </repository>
+    </distributionManagement>
 </project>
