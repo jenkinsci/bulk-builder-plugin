@@ -49,8 +49,8 @@ THE SOFTWARE.
 
     <scm>
         <connection>scm:git:git://github.com/jenkinsci/bulk-builder-plugin.git</connection>
-        <developerConnection>scm:git:git://github.com/jenkins/bulk-builder-plugin.git</developerConnection>
-        <url>https://github.com/jenkins/bulk-builder-plugin</url>
+        <developerConnection>scm:git:git://github.com/jenkinsci/bulk-builder-plugin.git</developerConnection>
+        <url>https://github.com/jenkinsci/bulk-builder-plugin</url>
     </scm>
 
     <ciManagement>
