@@ -1,4 +1,4 @@
-Bulk Builder Plugin for Hudson
+Bulk Builder Plugin for Jenkins
 ==============================
 
-See [Hudson wiki](http://wiki.hudson-ci.org/display/HUDSON/Bulk+Builder+Plugin) for details.
+See [Jenkins wiki](http://wiki.jenkins-ci.org/display/JENKINS/Bulk+Builder+Plugin) for details.
