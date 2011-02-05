@@ -35,7 +35,7 @@ THE SOFTWARE.
     </parent>
 
     <artifactId>bulk-builder</artifactId>
-    <version>0.6-SNAPSHOT</version>
+    <version>0.6</version>
     <packaging>hpi</packaging>
     <name>Bulk Builder</name>
     <url>http://wiki.jenkins-ci.org/display/JENKINS/Bulk+Builder+Plugin</url>
