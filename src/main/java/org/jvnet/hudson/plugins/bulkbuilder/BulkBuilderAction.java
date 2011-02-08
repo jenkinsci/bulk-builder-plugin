@@ -61,11 +61,6 @@ public class BulkBuilderAction implements RootAction {
         return "/bulkbuilder";
     }
 
-    //Computer[] computers = Hudson.getInstance().getComputers();
-    //for (Computer c : computers) {
-    //    c.countBusy();
-    //}
-
     public final void doBuild(StaplerRequest req, StaplerResponse rsp) throws ServletException, IOException {
         LOGGER.log(Level.FINE, "doBuild action called");
 
