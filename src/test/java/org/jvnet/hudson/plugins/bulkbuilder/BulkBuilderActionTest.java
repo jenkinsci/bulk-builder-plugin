@@ -34,6 +34,7 @@ import hudson.model.FreeStyleProject;
 import java.io.IOException;
 import java.util.List;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.jvnet.hudson.test.For;
 import org.jvnet.hudson.test.HudsonTestCase;
@@ -72,11 +73,6 @@ public class BulkBuilderActionTest extends HudsonTestCase
     public void testFormElementsPresent() throws Exception {
         HtmlPage page = new WebClient().goTo("/bulkbuilder");
 
-        // some text
-        assertStringContains(page.asXml(), "Build all jobs");
-        assertStringContains(page.asXml(), "Build failed jobs");
-        assertStringContains(page.asXml(), "Build jobs matching pattern:");
-
         // form
         HtmlForm form = page.getFormByName("builder");
         assertEquals("build", form.getActionAttribute());
@@ -91,8 +87,8 @@ public class BulkBuilderActionTest extends HudsonTestCase
         form.getInputByName("pattern");
     }
 
-    //@Test
-    public void testFormSubmitBuildAll() throws Exception {
+    @Ignore("HTMLUnit is struggling to find submit button") @Test
+    public void atestFormSubmitBuildAll() throws Exception {
         HtmlPage page = new WebClient().goTo("/bulkbuilder");
 
         HtmlForm form = page.getFormByName("builder");
@@ -108,6 +104,7 @@ public class BulkBuilderActionTest extends HudsonTestCase
 
         FreeStyleProject project1 = createFreeStyleProject("project1");
         FreeStyleProject project2 = createFreeStyleProject("project2");
+
         // Click that button!
         Page click = submitButton.click();
 

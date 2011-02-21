@@ -30,28 +30,26 @@
                             </table>
                         </f:entry>
                     </f:radioBlock>
+                </f:block>
                 <f:block>
-                <f:entry name="submit">
-                    <f:submit name="submit" value="${%BulkBuilder.buildButton}"/>
-                </f:entry>
+                    <f:entry name="submit">
+                        <f:submit name="submit" value="${%BulkBuilder.buildButton}"/>
+                    </f:entry>
                 </f:block>
-                    <table>
-                        <f:optionalBlock name="paramBuild" title="${%BulkBuilder.paramBuildTitle}">
-                            <f:entry help="/plugin/bulk-builder/help/parameter-format.html">
-                                <table style="width: 100%">
-                                    <tr>
-                                        <td style="width: 15%">
-                                            <label for="params">${%BulkBuilder.paramInputLabel}:</label>
-                                        </td>
-                                        <td>
-                                            <f:textbox id="params" name="params"/>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </f:entry>
-                        </f:optionalBlock>
-                    </table>
-                </f:block>
+                <f:optionalBlock name="paramBuild" title="${%BulkBuilder.paramBuildTitle}">
+                    <f:entry help="/plugin/bulk-builder/help/parameter-format.html">
+                        <table style="width: 100%">
+                            <tr>
+                                <td style="width: 15%">
+                                    <label for="params">${%BulkBuilder.paramInputLabel}:</label>
+                                </td>
+                                <td>
+                                    <f:textbox id="params" name="params"/>
+                                </td>
+                            </tr>
+                        </table>
+                    </f:entry>
+                </f:optionalBlock>
             </f:form>
         </l:main-panel>
     </l:layout>
