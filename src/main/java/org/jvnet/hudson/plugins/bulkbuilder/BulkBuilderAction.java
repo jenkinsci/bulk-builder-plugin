@@ -35,6 +35,7 @@ import javax.servlet.ServletException;
 import org.jvnet.hudson.plugins.bulkbuilder.model.Builder;
 import org.jvnet.hudson.plugins.bulkbuilder.model.BuildHistory;
 import org.jvnet.hudson.plugins.bulkbuilder.model.BuildHistoryItem;
+import org.jvnet.hudson.plugins.bulkbuilder.model.BuildType;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 import org.kohsuke.stapler.export.Exported;
@@ -64,21 +65,26 @@ public class BulkBuilderAction implements RootAction {
     public final void doBuild(StaplerRequest req, StaplerResponse rsp) throws ServletException, IOException {
         LOGGER.log(Level.FINE, "doBuild action called");
 
-        String build = req.getParameter("build");
-
+        BuildType type = BuildType.valueOf(req.getParameter("build").toUpperCase());
         Builder builder = new Builder();
 
-        if (build.equalsIgnoreCase("all")) {
-            builder.buildAll();
-        } else if (build.equalsIgnoreCase("failed")) {
-            builder.buildFailed();
-        } else if (build.equalsIgnoreCase("pattern")) {
-            String pattern = req.getParameter("pattern");
-            builder.buildPattern(pattern);
-            BuildHistory history = Hudson.getInstance().getPlugin(BuildHistory.class);
-            history.add(new BuildHistoryItem(pattern));
+        switch (type) {
+            case ALL:
+                builder.buildAll();
+                break;
+
+            case FAILED:
+                builder.buildFailed();
+                break;
+
+            case PATTERN:
+                String pattern = req.getParameter("pattern");
+                builder.buildPattern(pattern);
+                BuildHistory history = Hudson.getInstance().getPlugin(BuildHistory.class);
+                history.add(new BuildHistoryItem(pattern));
+                break;
         }
-        
+
         rsp.forwardToPreviousPage(req);
     }
 
