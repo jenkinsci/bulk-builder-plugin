@@ -27,21 +27,42 @@ package org.jvnet.hudson.plugins.bulkbuilder.model;
 import hudson.model.AbstractProject;
 import hudson.model.Cause;
 import hudson.model.Hudson;
+import hudson.model.ParameterDefinition;
+import hudson.model.ParameterValue;
+import hudson.model.ParametersAction;
+import hudson.model.ParametersDefinitionProperty;
 import hudson.model.Result;
 import hudson.model.Run;
+import hudson.model.StringParameterDefinition;
 import hudson.model.TopLevelItem;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
  * @author simon
  */
 public class Builder {
 
     private static final Logger LOGGER = Logger.getLogger(Builder.class.getName());
+
+    /**
+     * Key/value map of user parameters
+     */
+    private Map<String, String> userParams;
+
+    public Builder() {}
+
+    /**
+     * Create new Builder object, passing in any project parameters
+     *
+     * @param userParams
+     */
+    public Builder(Map<String, String> userParams) {
+        this.userParams = userParams;
+    }
 
     /**
      * Build all Hudson projects
@@ -53,7 +74,7 @@ public class Builder {
         int i = 0;
 
         for (AbstractProject project : getProjects()) {
-            project.scheduleBuild(new Cause.UserCause());
+            doBuildProject(project);
             i++;
         }
 
@@ -79,7 +100,8 @@ public class Builder {
 
             if (build == null || build.getResult().isWorseOrEqualTo(Result.FAILURE)) {
                 LOGGER.log(Level.FINE, "Scheduling build for job: {0}", project.getDisplayName());
-                project.scheduleBuild(new Cause.UserCause());
+
+                doBuildProject(project);
                 i++;
             }
         }
@@ -102,7 +124,7 @@ public class Builder {
 
         for (AbstractProject project : getProjects()) {
             if (project.getDisplayName().contains(pattern)) {
-                project.scheduleBuild(new Cause.UserCause());
+                doBuildProject(project);
                 i++;
             }
         }
@@ -135,5 +157,56 @@ public class Builder {
         }
 
         return projects;
+    }
+
+    /**
+     * Actually build a project, passing in parameters where appropriate
+     *
+     * @param project
+     * @return
+     */
+    protected final void doBuildProject(AbstractProject project) {
+
+        // no user parameters provided, just build it
+        if (userParams == null) {
+            project.scheduleBuild(new Cause.UserCause());
+            return;
+        }
+
+        ParametersDefinitionProperty pp = (ParametersDefinitionProperty) project.getProperty(ParametersDefinitionProperty.class);
+
+        // project does not except any parameters, just build it
+        if (pp == null) {
+            project.scheduleBuild(new Cause.UserCause());
+            return;
+        }
+
+        List<ParameterDefinition> parameterDefinitions = pp.getParameterDefinitions();
+        List<ParameterValue> values = new ArrayList<ParameterValue>();
+
+        for (ParameterDefinition paramDef : parameterDefinitions) {
+
+            if (!(paramDef instanceof StringParameterDefinition)) {
+                // TODO add support for other parameter types
+                values.add(paramDef.getDefaultParameterValue());
+                continue;
+            }
+
+            StringParameterDefinition stringParamDef = (StringParameterDefinition) paramDef;
+            ParameterValue value;
+
+            // Did user supply this parameter?
+            if (userParams.containsKey(paramDef.getName())) {
+                value = stringParamDef.createValue(userParams.get(stringParamDef.getName()));
+            } else {
+                // No, then use the default value
+                value = stringParamDef.createValue(stringParamDef.getDefaultValue());
+            }
+
+            values.add(value);
+        }
+
+        //project.scheduleBuild(1, new Cause.UserCause(), new ParametersAction(values));
+        Hudson.getInstance().getQueue().schedule(pp.getOwner(), 1, new ParametersAction(values));
     }
 }

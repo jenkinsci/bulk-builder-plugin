@@ -24,6 +24,8 @@
 
 package org.jvnet.hudson.plugins.bulkbuilder;
 
+import com.gargoylesoftware.htmlunit.Page;
+import com.gargoylesoftware.htmlunit.html.HtmlButton;
 import com.gargoylesoftware.htmlunit.html.HtmlForm;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.html.HtmlRadioButtonInput;
@@ -32,6 +34,7 @@ import hudson.model.FreeStyleProject;
 import java.io.IOException;
 import java.util.List;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.jvnet.hudson.test.For;
 import org.jvnet.hudson.test.HudsonTestCase;
@@ -67,13 +70,8 @@ public class BulkBuilderActionTest extends HudsonTestCase
     }
 
     @Test
-    public void testBulkBuilderForm() throws Exception {
+    public void testFormElementsPresent() throws Exception {
         HtmlPage page = new WebClient().goTo("/bulkbuilder");
-
-        // some text
-        assertStringContains(page.asXml(), "Build all jobs");
-        assertStringContains(page.asXml(), "Build failed jobs");
-        assertStringContains(page.asXml(), "Build jobs matching pattern:");
 
         // form
         HtmlForm form = page.getFormByName("builder");
@@ -82,10 +80,35 @@ public class BulkBuilderActionTest extends HudsonTestCase
 
         // radio group
         List<HtmlRadioButtonInput> radioButtons = form.getRadioButtonsByName("build");
+
         assertEquals(3, radioButtons.size());
 
         // text box
         form.getInputByName("pattern");
+    }
+
+    @Ignore("HTMLUnit is struggling to find submit button") @Test
+    public void atestFormSubmitBuildAll() throws Exception {
+        HtmlPage page = new WebClient().goTo("/bulkbuilder");
+
+        HtmlForm form = page.getFormByName("builder");
+
+        List<HtmlRadioButtonInput> radioButtons = form.getRadioButtonsByName("build");
+        for (HtmlRadioButtonInput radioButton : radioButtons) {
+            if (radioButton.getValueAttribute().equalsIgnoreCase("all")) {
+                radioButton.setChecked(true);
+            }
+        }
+
+        HtmlButton submitButton = form.getButtonByCaption("Build!");
+
+        FreeStyleProject project1 = createFreeStyleProject("project1");
+        FreeStyleProject project2 = createFreeStyleProject("project2");
+
+        // Click that button!
+        Page click = submitButton.click();
+
+        assertEquals(2, action.getQueueSize());
     }
 
     @Test

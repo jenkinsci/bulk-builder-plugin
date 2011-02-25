@@ -24,19 +24,12 @@
 
 package org.jvnet.hudson.plugins.bulkbuilder.model;
 
-import org.apache.commons.io.FileUtils;
-import hudson.model.FreeStyleBuild;
-import hudson.model.Hudson;
 import org.junit.Before;
 import hudson.model.FreeStyleProject;
-import java.io.IOException;
 import org.jvnet.hudson.test.HudsonTestCase;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.jvnet.hudson.test.FailureBuilder;
 import org.jvnet.hudson.test.UnstableBuilder;
-import static org.junit.Assert.*;
 
 /**
  * @author simon

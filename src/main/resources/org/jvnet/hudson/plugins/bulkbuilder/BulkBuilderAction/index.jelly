@@ -9,20 +9,47 @@
             <h3>${%BulkBuilder.description}</h3>
             <p>${%BulkBuilder.queueSize}: ${it.queueSize}</p>
             <f:form name="builder" action="build" method="post">
-                <f:entry name="Build All">
-                    <f:radio id="all" name="build" value="all"/> <label for="all">${%BulkBuilder.buildAll}</label>
-                </f:entry>
-                <f:entry name="Build All">
-                    <f:radio id="failed" name="build" value="failed"/> <label for="failed">${%BulkBuilder.buildFailed}</label>
-                </f:entry>
-                <f:entry name="Build Pattern">
-                    <f:radio id="pattern" name="build" value="pattern"/>
-                    <label for="pattern">${%BulkBuilder.buildPattern}:</label>
-                    <f:editableComboBox name="pattern" items="${it.history}" />
-                </f:entry>
-                <f:entry name="submit">
-                    <f:submit name="build" value="${%BulkBuilder.buildButton}"/>
-                </f:entry>
+                <f:block>
+                    <f:radioBlock id="all" title="${%BulkBuilder.buildAll}" name="build" value="all"/>
+                </f:block>
+                <f:block>
+                    <f:radioBlock id="failed" title="${%BulkBuilder.buildFailed}" name="build" value="failed"/>
+                </f:block>
+                <f:block>
+                    <f:radioBlock id="pattern" title="${%BulkBuilder.buildPattern}" name="build" value="pattern">
+                        <f:entry help="/plugin/bulk-builder/help/pattern-format.html">
+                            <table style="width: 100%">
+                                <tr>
+                                    <td style="width: 15%">
+                                            <label for="pattern">${%BulkBuilder.patternLabel}:</label>
+                                    </td>
+                                    <td>
+                                        <f:editableComboBox id="pattern" name="pattern" items="${it.history}" clazz="setting-input"/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </f:entry>
+                    </f:radioBlock>
+                </f:block>
+                <f:block>
+                    <f:entry name="submit">
+                        <f:submit name="submit" value="${%BulkBuilder.buildButton}"/>
+                    </f:entry>
+                </f:block>
+                <f:optionalBlock name="paramBuild" title="${%BulkBuilder.paramBuildTitle}">
+                    <f:entry help="/plugin/bulk-builder/help/parameter-format.html">
+                        <table style="width: 100%">
+                            <tr>
+                                <td style="width: 15%">
+                                    <label for="params">${%BulkBuilder.paramInputLabel}:</label>
+                                </td>
+                                <td>
+                                    <f:textbox id="params" name="params"/>
+                                </td>
+                            </tr>
+                        </table>
+                    </f:entry>
+                </f:optionalBlock>
             </f:form>
         </l:main-panel>
     </l:layout>
