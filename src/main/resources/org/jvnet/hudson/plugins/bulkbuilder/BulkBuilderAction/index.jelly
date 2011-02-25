@@ -21,7 +21,7 @@
                             <table style="width: 100%">
                                 <tr>
                                     <td style="width: 15%">
-                                        <label for="pattern">Pattern:</label>
+                                            <label for="pattern">${%BulkBuilder.patternLabel}:</label>
                                     </td>
                                     <td>
                                         <f:editableComboBox id="pattern" name="pattern" items="${it.history}" clazz="setting-input"/>
