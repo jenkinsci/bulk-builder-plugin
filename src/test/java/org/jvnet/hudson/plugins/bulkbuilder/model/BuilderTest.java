@@ -77,7 +77,7 @@ public class BuilderTest extends HudsonTestCase {
      * Test of buildAll method, of class Builder.
      */
     @Test
-    public void testBuildAll() throws Exception{
+    public void testBuildAll() {
         assertEquals(4, builder.buildAll());
     }
 

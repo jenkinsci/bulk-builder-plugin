@@ -28,7 +28,6 @@ import hudson.Extension;
 import hudson.model.Hudson;
 import hudson.model.RootAction;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
