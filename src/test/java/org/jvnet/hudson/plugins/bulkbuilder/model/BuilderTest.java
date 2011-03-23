@@ -30,6 +30,8 @@ import org.jvnet.hudson.test.HudsonTestCase;
 import org.junit.Test;
 import org.jvnet.hudson.test.FailureBuilder;
 import org.jvnet.hudson.test.UnstableBuilder;
+import org.jvnet.hudson.test.recipes.PresetData;
+import org.jvnet.hudson.test.recipes.PresetData.DataSet;
 
 /**
  * @author simon
@@ -96,5 +98,17 @@ public class BuilderTest extends HudsonTestCase {
     public void testBuildPattern() {
         assertEquals(1, builder.buildPattern("stable"));
         assertEquals(3, builder.buildPattern("l"));
+    }
+
+    /**
+     * Test project
+     */
+    @Test
+    @PresetData(DataSet.ANONYMOUS_READONLY)
+    public void testInsufficientBuildPermission() {
+        int buildNumber = project1.getNextBuildNumber();
+        assertEquals(1, builder.buildPattern("success"));
+        int nextBuildNumber = project1.getNextBuildNumber();
+        assertEquals(buildNumber, nextBuildNumber);
     }
 }

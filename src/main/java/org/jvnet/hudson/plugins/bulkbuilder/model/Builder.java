@@ -35,6 +35,7 @@ import hudson.model.Result;
 import hudson.model.Run;
 import hudson.model.StringParameterDefinition;
 import hudson.model.TopLevelItem;
+import hudson.security.Permission;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -166,6 +167,11 @@ public class Builder {
      * @return
      */
     protected final void doBuildProject(AbstractProject project) {
+
+        if (!project.hasPermission(AbstractProject.BUILD)) {
+            LOGGER.log(Level.WARNING, "Insufficient permissions to build {0}", project.getName());
+            return;
+        }
 
         // no user parameters provided, just build it
         if (userParams == null) {
