@@ -101,7 +101,7 @@ public class BuilderTest extends HudsonTestCase {
     }
 
     /**
-     * Test project
+     * Test user has necessary permission to build job.
      */
     @Test
     @PresetData(DataSet.ANONYMOUS_READONLY)
