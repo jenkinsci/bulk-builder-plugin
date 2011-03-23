@@ -32,9 +32,7 @@
                     </f:radioBlock>
                 </f:block>
                 <f:block>
-                    <f:entry name="submit">
-                        <f:submit name="submit" value="${%BulkBuilder.buildButton}"/>
-                    </f:entry>
+                    <input type="submit" name="Submit" value="${%BulkBuilder.buildButton}" id="submit" style="margin-left:5em" />
                 </f:block>
                 <f:optionalBlock name="paramBuild" title="${%BulkBuilder.paramBuildTitle}">
                     <f:entry help="/plugin/bulk-builder/help/parameter-format.html">
@@ -51,6 +49,11 @@
                     </f:entry>
                 </f:optionalBlock>
             </f:form>
+            <script>
+                <![CDATA[
+                makeButton($('submit'),null);
+                ]]>
+            </script>
         </l:main-panel>
     </l:layout>
 </j:jelly>
