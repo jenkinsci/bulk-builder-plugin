@@ -66,7 +66,13 @@ public class BulkBuilderAction implements RootAction {
     public final void doBuild(StaplerRequest req, StaplerResponse rsp) throws ServletException, IOException {
         LOGGER.log(Level.FINE, "doBuild action called");
 
-        BuildType type = BuildType.valueOf(req.getParameter("build").toUpperCase());
+        String buildType = req.getParameter("build");
+        if (buildType == null) {
+            rsp.forwardToPreviousPage(req);
+            return;
+        }
+
+        BuildType type = BuildType.valueOf(buildType.toUpperCase());
         String params = req.getParameter("params");
 
         BulkParamProcessor processor = new BulkParamProcessor(params);
