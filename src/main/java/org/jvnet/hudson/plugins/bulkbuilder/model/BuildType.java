@@ -28,5 +28,12 @@ package org.jvnet.hudson.plugins.bulkbuilder.model;
  * @author simon
  */
 public enum BuildType {
-    ALL, FAILED, PATTERN
+    ALL,
+    UNSTABLE,
+    UNSTABLE_ONLY,
+    FAILED,
+    FAILED_ONLY,
+    NOT_BUILT,
+    NOT_BUILD_ONLY,
+    ABORTED, PATTERN
 }
