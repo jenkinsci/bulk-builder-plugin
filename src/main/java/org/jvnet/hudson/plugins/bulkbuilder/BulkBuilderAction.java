@@ -82,11 +82,27 @@ public class BulkBuilderAction implements RootAction {
             case ALL:
                 builder.buildAll();
                 break;
-
+            case UNSTABLE:
+                builder.buildUnstable();
+                break;
+            case UNSTABLE_ONLY:
+                builder.buildUnstableOnly();
+                break;
             case FAILED:
                 builder.buildFailed();
                 break;
-
+            case FAILED_ONLY:
+                builder.buildFailedOnly();
+                break;
+            case NOT_BUILT:
+                builder.buildNotBuilt();
+                break;
+            case NOT_BUILD_ONLY:
+                builder.buildNotBuildOnly();
+                break;
+            case ABORTED:
+                builder.buildAborted();
+                break;
             case PATTERN:
                 String pattern = req.getParameter("pattern");
                 builder.buildPattern(pattern);

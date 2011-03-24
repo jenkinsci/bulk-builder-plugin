@@ -13,8 +13,26 @@
                     <f:radioBlock id="all" title="${%BulkBuilder.buildAll}" name="build" value="all"/>
                 </f:block>
                 <f:block>
+                    <f:radioBlock id="unstable" title="${%BulkBuilder.buildUnstable}" name="build" value="unstable"/>
+                </f:block>
+                <f:block>
+                    <f:radioBlock id="unstable_only" title="${%BulkBuilder.buildUnstableOnly}" name="build" value="unstable_only"/>
+                </f:block>
+                <f:block>
                     <f:radioBlock id="failed" title="${%BulkBuilder.buildFailed}" name="build" value="failed"/>
                 </f:block>
+                <f:block>
+                    <f:radioBlock id="failed_only" title="${%BulkBuilder.buildFailedOnly}" name="build" value="failed_only"/>
+                </f:block>
+                <f:block>
+                    <f:radioBlock id="not_build" title="${%BulkBuilder.buildNotBuilt}" name="build" value="not_built"/>
+                </f:block>
+                <f:block>
+                    <f:radioBlock id="not_build_only" title="${%BulkBuilder.buildNotBuiltOnly}" name="build" value="not_built_only"/>
+                </f:block>
+                <f:block>
+                    <f:radioBlock id="aborted" title="${%BulkBuilder.buildAborted}" name="build" value="aborted"/>
+                </f:block>                
                 <f:block>
                     <f:radioBlock id="pattern" title="${%BulkBuilder.buildPattern}" name="build" value="pattern">
                         <f:entry help="/plugin/bulk-builder/help/pattern-format.html">
