@@ -35,7 +35,6 @@ import hudson.model.Result;
 import hudson.model.Run;
 import hudson.model.StringParameterDefinition;
 import hudson.model.TopLevelItem;
-import hudson.security.Permission;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
