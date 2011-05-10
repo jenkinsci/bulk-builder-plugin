@@ -49,6 +49,10 @@ public class BulkParamProcessor {
      * @return
      */
     public Map<String, String> getProjectParams() {
+        if (rawParams == null) {
+            return null;
+        }
+
         StringTokenizer tokeniser = new StringTokenizer(rawParams, "&");
 
         Map<String, String> values = new HashMap<String, String>(tokeniser.countTokens());
