@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<rss version="0.91">
+  <channel>
+    <title>Bulk Builder - Checkstyle report</title>
+    <link>http://wiki.jenkins-ci.org/display/JENKINS/Bulk+Builder+Plugin</link>
+    <description>Bulk Builder - Checkstyle report</description>
+    <language>en-us</language>
+    <copyright>&#169;2011</copyright>
+    <item>
+      <title>File: 6,
+             Errors: 86,
+             Warnings: 0,
+             Infos: 0
+      </title>
+            <link>http://wiki.jenkins-ci.org/display/JENKINS/Bulk+Builder+Plugin/checkstyle.html</link>
+      <description>
+        <p>Click <a href="http://wiki.jenkins-ci.org/display/JENKINS/Bulk+Builder+Plugin/checkstyle.html">here</a> for the full Checkstyle report.</p>
+
+        <table summary="Files" boder="1">
+          <thead>
+            <tr>
+              <th>Files</th>
+              <th style="width:30px;"><abbr title="Info">I</abbr></th>
+              <th style="width:30px;"><abbr title="Warning">W</abbr></th>
+              <th style="width:30px;"><abbr title="Error">E</abbr></th>
+            </tr>
+          </thead>
+          <tbody>
+                          <tr>
+                <td>
+                  <a href="http://wiki.jenkins-ci.org/display/JENKINS/Bulk+Builder+Plugin/checkstyle.html#org.jvnet.hudson.plugins.bulkbuilder.model.Builder.java">org/jvnet/hudson/plugins/bulkbuilder/model/Builder.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  35
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://wiki.jenkins-ci.org/display/JENKINS/Bulk+Builder+Plugin/checkstyle.html#org.jvnet.hudson.plugins.bulkbuilder.model.BuildHistoryItem.java">org/jvnet/hudson/plugins/bulkbuilder/model/BuildHistoryItem.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  10
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://wiki.jenkins-ci.org/display/JENKINS/Bulk+Builder+Plugin/checkstyle.html#org.jvnet.hudson.plugins.bulkbuilder.model.BuildType.java">org/jvnet/hudson/plugins/bulkbuilder/model/BuildType.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  3
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://wiki.jenkins-ci.org/display/JENKINS/Bulk+Builder+Plugin/checkstyle.html#org.jvnet.hudson.plugins.bulkbuilder.model.BulkParamProcessor.java">org/jvnet/hudson/plugins/bulkbuilder/model/BulkParamProcessor.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  10
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://wiki.jenkins-ci.org/display/JENKINS/Bulk+Builder+Plugin/checkstyle.html#org.jvnet.hudson.plugins.bulkbuilder.BulkBuilderAction.java">org/jvnet/hudson/plugins/bulkbuilder/BulkBuilderAction.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  16
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://wiki.jenkins-ci.org/display/JENKINS/Bulk+Builder+Plugin/checkstyle.html#org.jvnet.hudson.plugins.bulkbuilder.model.BuildHistory.java">org/jvnet/hudson/plugins/bulkbuilder/model/BuildHistory.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  12
+                </td>
+              </tr>
+                      </tbody>
+        </table>
+        
+      </description>
+    </item>
+  </channel>
+</rss>
+
