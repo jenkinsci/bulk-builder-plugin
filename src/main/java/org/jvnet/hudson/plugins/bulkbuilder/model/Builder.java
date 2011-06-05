@@ -24,6 +24,8 @@
 
 package org.jvnet.hudson.plugins.bulkbuilder.model;
 
+import com.google.common.base.Predicate;
+import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.model.Cause;
 import hudson.model.Hudson;
@@ -84,57 +86,63 @@ public class Builder {
     }
 
     /**
+     * Build all Hudson projects
+     */
+    public final int build(Predicate<AbstractBuild> pred) {
+        int i = 0;
+
+        for (AbstractProject<?,?> project : getProjects()) {
+            AbstractBuild build = project.getLastCompletedBuild();
+
+            if (pred.apply(build)) {
+                LOGGER.log(Level.FINE, "Scheduling build for job: {0}", project.getDisplayName());
+
+                doBuildProject(project);
+                i++;
+            }
+        }
+
+        return i;
+
+    }
+
+    private int buildWorseOrEqualsTo(final Result r) {
+        LOGGER.log(Level.FINE, "Starting to build "+r.toString()+" jobs.");
+        int i = build(new Predicate<AbstractBuild>() {
+            public boolean apply(AbstractBuild build) {
+                return build == null || build.getResult().isWorseOrEqualTo(r);
+            }
+        });
+        LOGGER.log(Level.FINE, "Finished building "+r.toString()+" jobs.");
+        return i;
+    }
+
+    private int buildExactStatus(final Result r) {
+        LOGGER.log(Level.FINE, "Starting to build "+r.toString()+" jobs.");
+        int i = build(new Predicate<AbstractBuild>() {
+            public boolean apply(AbstractBuild build) {
+                return build == null || build.getResult()==r;
+            }
+        });
+        LOGGER.log(Level.FINE, "Finished building "+r.toString()+" jobs.");
+        return i;
+    }
+
+    /**
      * Build all unstable builds.
      * 
      * This includes projects that are unstable, have not been built before,
      * failed and aborted projects. 
      */
     public final int buildUnstable() {
-
-        LOGGER.log(Level.FINE, "Starting to build failed jobs.");
-
-        int i = 0;
-
-        for (AbstractProject project : getProjects()) {
-            Run build = project.getLastCompletedBuild();
-
-            if (build == null || build.getResult().ordinal == Result.UNSTABLE.ordinal) {
-                LOGGER.log(Level.FINE, "Scheduling build for job: {0}", project.getDisplayName());
-
-                doBuildProject(project);
-                i++;
-            }
-        }
-
-        LOGGER.log(Level.FINE, "Finished building failed jobs.");
-
-        return i;
-        
+        return buildWorseOrEqualsTo(Result.UNSTABLE);
     }
+
     /**
      * Build all unstable builds only.
      */
     public final int buildUnstableOnly() {
-
-        LOGGER.log(Level.FINE, "Starting to build failed jobs.");
-
-        int i = 0;
-
-        for (AbstractProject project : getProjects()) {
-            Run build = project.getLastCompletedBuild();
-
-            if (build == null || build.getResult().isWorseOrEqualTo(Result.UNSTABLE)) {
-                LOGGER.log(Level.FINE, "Scheduling build for job: {0}", project.getDisplayName());
-
-                doBuildProject(project);
-                i++;
-            }
-        }
-
-        LOGGER.log(Level.FINE, "Finished building failed jobs.");
-
-        return i;
-        
+        return buildExactStatus(Result.UNSTABLE);
     }
 
     /**
@@ -144,49 +152,14 @@ public class Builder {
      * aborted projects.
      */
     public final int buildFailed() {
-
-        LOGGER.log(Level.FINE, "Starting to build failed jobs.");
-
-        int i = 0;
-
-        for (AbstractProject project : getProjects()) {
-            Run build = project.getLastCompletedBuild();
-
-            if (build == null || build.getResult().isWorseOrEqualTo(Result.FAILURE)) {
-                LOGGER.log(Level.FINE, "Scheduling build for job: {0}", project.getDisplayName());
-
-                doBuildProject(project);
-                i++;
-            }
-        }
-
-        LOGGER.log(Level.FINE, "Finished building failed jobs.");
-
-        return i;
+        return buildWorseOrEqualsTo(Result.FAILURE);
     }
 
     /**
      * Build all failed builds only.
      */
     public int buildFailedOnly() {
-        LOGGER.log(Level.FINE, "Starting to build failed jobs.");
-
-        int i = 0;
-
-        for (AbstractProject project : getProjects()) {
-            Run build = project.getLastCompletedBuild();
-
-            if (build == null || build.getResult().ordinal == Result.FAILURE.ordinal) {
-                LOGGER.log(Level.FINE, "Scheduling build for job: {0}", project.getDisplayName());
-
-                doBuildProject(project);
-                i++;
-            }
-        }
-
-        LOGGER.log(Level.FINE, "Finished building failed jobs.");
-
-        return i;
+        return buildExactStatus(Result.FAILURE);
     }
 
     /**
@@ -196,72 +169,21 @@ public class Builder {
      * and aborted projects. 
      */
     public int buildNotBuilt() {
-        LOGGER.log(Level.FINE, "Starting to build failed jobs.");
-
-        int i = 0;
-
-        for (AbstractProject project : getProjects()) {
-            Run build = project.getLastCompletedBuild();
-
-            if (build == null || build.getResult().isWorseOrEqualTo(Result.NOT_BUILT)) {
-                LOGGER.log(Level.FINE, "Scheduling build for job: {0}", project.getDisplayName());
-
-                doBuildProject(project);
-                i++;
-            }
-        }
-
-        LOGGER.log(Level.FINE, "Finished building failed jobs.");
-
-        return i;
+        return buildWorseOrEqualsTo(Result.NOT_BUILT);
     }
+
     /**
      * Build all not built jobs only.
      */
     public int buildNotBuildOnly() {
-        LOGGER.log(Level.FINE, "Starting to build failed jobs.");
-
-        int i = 0;
-
-        for (AbstractProject project : getProjects()) {
-            Run build = project.getLastCompletedBuild();
-
-            if (build == null || build.getResult().ordinal == Result.NOT_BUILT.ordinal) {
-                LOGGER.log(Level.FINE, "Scheduling build for job: {0}", project.getDisplayName());
-
-                doBuildProject(project);
-                i++;
-            }
-        }
-
-        LOGGER.log(Level.FINE, "Finished building failed jobs.");
-
-        return i;
+        return buildExactStatus(Result.NOT_BUILT);
     }
 
     /**
      * Build all aborted builds.
      */
     public int buildAborted() {
-        LOGGER.log(Level.FINE, "Starting to build failed jobs.");
-
-        int i = 0;
-
-        for (AbstractProject project : getProjects()) {
-            Run build = project.getLastCompletedBuild();
-
-            if (build == null || build.getResult().isWorseOrEqualTo(Result.ABORTED)) {
-                LOGGER.log(Level.FINE, "Scheduling build for job: {0}", project.getDisplayName());
-
-                doBuildProject(project);
-                i++;
-            }
-        }
-
-        LOGGER.log(Level.FINE, "Finished building failed jobs.");
-
-        return i;
-        
+        return buildWorseOrEqualsTo(Result.ABORTED);
     }
     /**
      * Build projects that matched the supplied pattern
