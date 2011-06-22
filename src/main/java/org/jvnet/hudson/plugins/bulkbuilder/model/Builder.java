@@ -81,7 +81,7 @@ public class Builder {
 
 	int i = 0;
 
-	for (AbstractProject project : getProjects()) {
+	for (AbstractProject<?, ?> project : getProjects()) {
 	    doBuildProject(project);
 	    i++;
 	}
@@ -96,11 +96,11 @@ public class Builder {
     /**
      * Build all Jenkins projects
      */
-    public final int build(Predicate<AbstractBuild> pred) {
+    public final int build(Predicate<AbstractBuild<?, ?>> pred) {
 	int i = 0;
 
 	for (AbstractProject<?, ?> project : getProjects()) {
-	    AbstractBuild build = project.getLastCompletedBuild();
+	    AbstractBuild<?, ?> build = project.getLastCompletedBuild();
 
 	    if (pred.apply(build)) {
 
@@ -124,8 +124,8 @@ public class Builder {
 		    + " jobs.");
 	}
 
-	int i = build(new Predicate<AbstractBuild>() {
-	    public boolean apply(AbstractBuild build) {
+	int i = build(new Predicate<AbstractBuild<?, ?>>() {
+	    public boolean apply(AbstractBuild<?, ?> build) {
 		return build == null || build.getResult().isWorseOrEqualTo(r);
 	    }
 	});
@@ -144,8 +144,8 @@ public class Builder {
 		    + " jobs.");
 	}
 
-	int i = build(new Predicate<AbstractBuild>() {
-	    public boolean apply(AbstractBuild build) {
+	int i = build(new Predicate<AbstractBuild<?, ?>>() {
+	    public boolean apply(AbstractBuild<?, ?> build) {
 		return build == null || build.getResult() == r;
 	    }
 	});
@@ -229,7 +229,7 @@ public class Builder {
 
 	int i = 0;
 
-	for (AbstractProject project : getProjects()) {
+	for (AbstractProject<?, ?> project : getProjects()) {
 	    if (project.getDisplayName().contains(pattern)) {
 		doBuildProject(project);
 		i++;
@@ -250,7 +250,8 @@ public class Builder {
      */
     public final int buildView(String viewName) {
 	if (LOGGER.isLoggable(Level.FINE)) {
-	    LOGGER.log(Level.FINE, "Starting to build jobs in View '" + viewName +"'.");
+	    LOGGER.log(Level.FINE, "Starting to build jobs in View '"
+		    + viewName + "'.");
 	}
 
 	int i = 0;
@@ -259,13 +260,13 @@ public class Builder {
 
 	if (view == null) {
 	    if (LOGGER.isLoggable(Level.WARNING)) {
-		LOGGER.log(Level.WARNING, "View '"+viewName+"' not found!");
+		LOGGER.log(Level.WARNING, "View '" + viewName + "' not found!");
 	    }
 	}
 
 	else {
-	    for (AbstractProject project : Util.createSubList(view.getItems(),
-		    AbstractProject.class)) {
+	    for (AbstractProject<?, ?> project : Util.createSubList(
+		    view.getItems(), AbstractProject.class)) {
 		doBuildProject(project);
 		i++;
 	    }
@@ -283,16 +284,16 @@ public class Builder {
      * 
      * @return
      */
-    protected final List<AbstractProject> getProjects() {
+    protected final List<AbstractProject<?, ?>> getProjects() {
 
-	List<AbstractProject> projects = new ArrayList<AbstractProject>();
+	List<AbstractProject<?, ?>> projects = new ArrayList<AbstractProject<?, ?>>();
 
 	for (TopLevelItem topLevelItem : Hudson.getInstance().getItems()) {
 	    if (!(topLevelItem instanceof AbstractProject)) {
 		continue;
 	    }
 
-	    AbstractProject project = (AbstractProject) topLevelItem;
+	    AbstractProject<?, ?> project = (AbstractProject<?, ?>) topLevelItem;
 	    if (!project.isBuildable()) {
 		continue;
 	    }
@@ -309,8 +310,7 @@ public class Builder {
      * @param project
      * @return
      */
-    protected final void doBuildProject(AbstractProject project) {
-
+    protected final void doBuildProject(AbstractProject<?, ?> project) {
 	if (!project.hasPermission(AbstractProject.BUILD)) {
 	    if (LOGGER.isLoggable(Level.WARNING)) {
 		LOGGER.log(Level.WARNING,
