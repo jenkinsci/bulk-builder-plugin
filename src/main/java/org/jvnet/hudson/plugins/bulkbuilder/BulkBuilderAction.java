@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2010-2011 Simon Westcott
+ * Copyright (c) 2010-2011 Simon Westcott, Jesse Farinacci
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,15 +27,16 @@ package org.jvnet.hudson.plugins.bulkbuilder;
 import hudson.Extension;
 import hudson.model.RootAction;
 import hudson.model.Hudson;
+import hudson.model.View;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 
-import org.jfree.util.Log;
 import org.jvnet.hudson.plugins.bulkbuilder.model.BuildHistory;
 import org.jvnet.hudson.plugins.bulkbuilder.model.BuildHistoryItem;
 import org.jvnet.hudson.plugins.bulkbuilder.model.BuildType;
@@ -48,6 +49,7 @@ import org.kohsuke.stapler.export.ExportedBean;
 
 /**
  * @author simon
+ * @author <a href="mailto:jieryn@gmail.com">Jesse Farinacci</a>
  */
 @ExportedBean
 @Extension
@@ -145,5 +147,14 @@ public class BulkBuilderAction implements RootAction {
     @Exported
     public final List<BuildHistoryItem> getHistory() {
 	return Hudson.getInstance().getPlugin(BuildHistory.class).getAll();
+    }
+
+    /**
+     * Get all available {@link hudson.model.View} for drop down box.
+     * 
+     * @return the views
+     */
+    public final Collection<View> getViews() {
+	return Hudson.getInstance().getViews();
     }
 }

@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2010-2011 Simon Westcott
+ * Copyright (c) 2010-2011 Simon Westcott, Jesse Farinacci
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,6 +26,7 @@ package org.jvnet.hudson.plugins.bulkbuilder.model;
 
 /**
  * @author simon
+ * @author <a href="mailto:jieryn@gmail.com">Jesse Farinacci</a>
  */
 public enum BuildType {
     /**

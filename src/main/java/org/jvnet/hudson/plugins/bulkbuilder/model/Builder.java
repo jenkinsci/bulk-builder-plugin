@@ -26,7 +26,6 @@ package org.jvnet.hudson.plugins.bulkbuilder.model;
 
 import hudson.Util;
 import hudson.model.ParameterValue;
-import hudson.model.Project;
 import hudson.model.Result;
 import hudson.model.TopLevelItem;
 import hudson.model.AbstractBuild;
@@ -251,8 +250,7 @@ public class Builder {
      */
     public final int buildView(String viewName) {
 	if (LOGGER.isLoggable(Level.FINE)) {
-	    LOGGER.log(Level.FINE, "Starting to build jobs in View '{0}'.",
-		    viewName);
+	    LOGGER.log(Level.FINE, "Starting to build jobs in View '" + viewName +"'.");
 	}
 
 	int i = 0;
@@ -261,7 +259,7 @@ public class Builder {
 
 	if (view == null) {
 	    if (LOGGER.isLoggable(Level.WARNING)) {
-		LOGGER.log(Level.WARNING, "View '{0}' not found!", viewName);
+		LOGGER.log(Level.WARNING, "View '"+viewName+"' not found!");
 	    }
 	}
 

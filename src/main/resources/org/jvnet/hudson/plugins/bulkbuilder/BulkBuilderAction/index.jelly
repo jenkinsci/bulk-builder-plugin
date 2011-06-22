@@ -41,7 +41,13 @@
                                             <label for="byView">${%BulkBuilder.byViewLabel}:</label>
                                         </td>
                                         <td>
-                                            <f:editableComboBox id="byview" name="byview" items="${it.history}" clazz="setting-input"/>
+                                            <select id="byview" name="byview">
+                                                <j:forEach var="view" items="${it.views}">
+                                                    <option id="${view.viewName}" name="byview" value="${view.viewName}">
+                                                        ${view.viewName} (${view.getItems().size()})
+                                                    </option>
+                                                </j:forEach>
+                                            </select>
                                         </td>
                                     </tr>
                                 </table>
