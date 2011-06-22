@@ -34,9 +34,14 @@ public enum BuildType {
     ABORTED,
 
     /**
-     * 
+     * @see {@link hudson.model.Hudson#getAllItems(Class)
      */
     ALL,
+
+    /**
+     * @see {@link hudson.model.Hudson#getViews()}
+     */
+    BYVIEW,
 
     /**
      * @see {@link hudson.model.Result#FAILURE}

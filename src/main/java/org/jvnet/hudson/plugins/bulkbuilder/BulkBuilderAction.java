@@ -35,6 +35,7 @@ import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 
+import org.jfree.util.Log;
 import org.jvnet.hudson.plugins.bulkbuilder.model.BuildHistory;
 import org.jvnet.hudson.plugins.bulkbuilder.model.BuildHistoryItem;
 import org.jvnet.hudson.plugins.bulkbuilder.model.BuildType;
@@ -86,14 +87,15 @@ public class BulkBuilderAction implements RootAction {
 	Builder builder = new Builder(processor.getProjectParams());
 
 	switch (type) {
+	case ABORTED:
+	    builder.buildAborted();
+	    break;
 	case ALL:
 	    builder.buildAll();
 	    break;
-	case UNSTABLE:
-	    builder.buildUnstable();
-	    break;
-	case UNSTABLE_ONLY:
-	    builder.buildUnstableOnly();
+	case BYVIEW:
+	    String viewName = req.getParameter("byview");
+	    builder.buildView(viewName);
 	    break;
 	case FAILED:
 	    builder.buildFailed();
@@ -101,14 +103,11 @@ public class BulkBuilderAction implements RootAction {
 	case FAILED_ONLY:
 	    builder.buildFailedOnly();
 	    break;
-	case NOT_BUILT:
-	    builder.buildNotBuilt();
-	    break;
 	case NOT_BUILD_ONLY:
 	    builder.buildNotBuildOnly();
 	    break;
-	case ABORTED:
-	    builder.buildAborted();
+	case NOT_BUILT:
+	    builder.buildNotBuilt();
 	    break;
 	case PATTERN:
 	    String pattern = req.getParameter("pattern");
@@ -116,6 +115,12 @@ public class BulkBuilderAction implements RootAction {
 	    BuildHistory history = Hudson.getInstance().getPlugin(
 		    BuildHistory.class);
 	    history.add(new BuildHistoryItem(pattern));
+	    break;
+	case UNSTABLE:
+	    builder.buildUnstable();
+	    break;
+	case UNSTABLE_ONLY:
+	    builder.buildUnstableOnly();
 	    break;
 	}
 

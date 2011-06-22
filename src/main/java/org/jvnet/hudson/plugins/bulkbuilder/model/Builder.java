@@ -24,7 +24,9 @@
 
 package org.jvnet.hudson.plugins.bulkbuilder.model;
 
+import hudson.Util;
 import hudson.model.ParameterValue;
+import hudson.model.Project;
 import hudson.model.Result;
 import hudson.model.TopLevelItem;
 import hudson.model.AbstractBuild;
@@ -35,6 +37,7 @@ import hudson.model.ParameterDefinition;
 import hudson.model.ParametersAction;
 import hudson.model.ParametersDefinitionProperty;
 import hudson.model.StringParameterDefinition;
+import hudson.model.View;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -221,8 +224,8 @@ public class Builder {
      */
     public final int buildPattern(String pattern) {
 	if (LOGGER.isLoggable(Level.FINE)) {
-	    LOGGER.log(Level.FINE, "Starting to jobs matching pattern, '{0}'.",
-		    pattern);
+	    LOGGER.log(Level.FINE,
+		    "Starting to build jobs matching pattern, '{0}'.", pattern);
 	}
 
 	int i = 0;
@@ -236,6 +239,42 @@ public class Builder {
 
 	if (LOGGER.isLoggable(Level.FINE)) {
 	    LOGGER.log(Level.FINE, "Finished building jobs matching pattern.");
+	}
+
+	return i;
+    }
+
+    /**
+     * Build projects that matched the supplied pattern
+     * 
+     * @param pattern
+     */
+    public final int buildView(String viewName) {
+	if (LOGGER.isLoggable(Level.FINE)) {
+	    LOGGER.log(Level.FINE, "Starting to build jobs in View '{0}'.",
+		    viewName);
+	}
+
+	int i = 0;
+
+	View view = Hudson.getInstance().getView(viewName);
+
+	if (view == null) {
+	    if (LOGGER.isLoggable(Level.WARNING)) {
+		LOGGER.log(Level.WARNING, "View '{0}' not found!", viewName);
+	    }
+	}
+
+	else {
+	    for (AbstractProject project : Util.createSubList(view.getItems(),
+		    AbstractProject.class)) {
+		doBuildProject(project);
+		i++;
+	    }
+	}
+
+	if (LOGGER.isLoggable(Level.FINE)) {
+	    LOGGER.log(Level.FINE, "Finished building jobs matching view.");
 	}
 
 	return i;

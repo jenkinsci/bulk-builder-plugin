@@ -32,6 +32,22 @@
                             </f:entry>
                         </f:radioBlock>
                     </f:block>
+                    <f:block>
+                        <f:radioBlock id="byView" title="${%BulkBuilder.buildByView}" name="build" value="byview">
+                            <f:entry help="/plugin/bulk-builder/help/byview-format.html">
+                                <table style="width: 100%">
+                                    <tr>
+                                        <td style="width: 15%">
+                                            <label for="byView">${%BulkBuilder.byViewLabel}:</label>
+                                        </td>
+                                        <td>
+                                            <f:editableComboBox id="byview" name="byview" items="${it.history}" clazz="setting-input"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </f:entry>
+                        </f:radioBlock>
+                    </f:block>
                     <f:advanced>
                         <f:block>
                             <f:radioBlock id="unstable" title="${%BulkBuilder.buildUnstable}" name="build" value="unstable"/>
