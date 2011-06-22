@@ -67,7 +67,7 @@ public class Builder {
     }
 
     /**
-     * Build all Hudson projects
+     * Build all Jenkins projects
      */
     public final int buildAll() {
 
@@ -86,7 +86,7 @@ public class Builder {
     }
 
     /**
-     * Build all Hudson projects
+     * Build all Jenkins projects
      */
     public final int build(Predicate<AbstractBuild> pred) {
         int i = 0;
@@ -146,7 +146,7 @@ public class Builder {
     }
 
     /**
-     * Build failed Hudson projects.
+     * Build failed Jenkins projects.
      *
      * This includes projects that have not been built before and failed and
      * aborted projects.
