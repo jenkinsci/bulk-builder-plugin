@@ -25,6 +25,7 @@
 package org.jvnet.hudson.plugins.bulkbuilder.model;
 
 import hudson.Plugin;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -45,38 +46,39 @@ public class BuildHistory extends Plugin {
 
     /**
      * Add a new pattern, over-writing any previous occurrences
+     * 
      * @param pattern
      */
     public final void add(BuildHistoryItem pattern) {
-        items.addFirst(pattern);
+	items.addFirst(pattern);
 
-        if (items.size() > SIZE) {
-            items.removeLast();
-        }
+	if (items.size() > SIZE) {
+	    items.removeLast();
+	}
     }
 
     /**
      * Return list of build patterns
-     *
+     * 
      * @return
      */
     public final List<BuildHistoryItem> getAll() {
-        return items;
+	return items;
     }
 
     /**
      * Return the size of the build history
-     *
+     * 
      * @return
      */
     public final int size() {
-        return items.size();
+	return items.size();
     }
 
     /**
      * Remove all items from build history
      */
     public final void clear() {
-        items.clear();
+	items.clear();
     }
 }

@@ -25,17 +25,20 @@
 package org.jvnet.hudson.plugins.bulkbuilder;
 
 import hudson.Extension;
-import hudson.model.Hudson;
 import hudson.model.RootAction;
+import hudson.model.Hudson;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.servlet.ServletException;
-import org.jvnet.hudson.plugins.bulkbuilder.model.Builder;
+
 import org.jvnet.hudson.plugins.bulkbuilder.model.BuildHistory;
 import org.jvnet.hudson.plugins.bulkbuilder.model.BuildHistoryItem;
 import org.jvnet.hudson.plugins.bulkbuilder.model.BuildType;
+import org.jvnet.hudson.plugins.bulkbuilder.model.Builder;
 import org.jvnet.hudson.plugins.bulkbuilder.model.BulkParamProcessor;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
@@ -49,88 +52,93 @@ import org.kohsuke.stapler.export.ExportedBean;
 @Extension
 public class BulkBuilderAction implements RootAction {
 
-    private static final Logger LOGGER = Logger.getLogger(BulkBuilderAction.class.getName());
+    private static final Logger LOGGER = Logger
+	    .getLogger(BulkBuilderAction.class.getName());
 
     public final String getIconFileName() {
-        return "/plugin/bulk-builder/icons/builder-32x32.png";
+	return "/plugin/bulk-builder/icons/builder-32x32.png";
     }
 
     public final String getDisplayName() {
-        return Messages.Plugin_Title();
+	return Messages.Plugin_Title();
     }
 
     public final String getUrlName() {
-        return "/bulkbuilder";
+	return "/bulkbuilder";
     }
 
-    public final void doBuild(StaplerRequest req, StaplerResponse rsp) throws ServletException, IOException {
-        LOGGER.log(Level.FINE, "doBuild action called");
+    public final void doBuild(StaplerRequest req, StaplerResponse rsp)
+	    throws ServletException, IOException {
+	if (LOGGER.isLoggable(Level.FINE)) {
+	    LOGGER.log(Level.FINE, "doBuild action called");
+	}
 
-        String buildType = req.getParameter("build");
-        if (buildType == null) {
-            rsp.forwardToPreviousPage(req);
-            return;
-        }
+	String buildType = req.getParameter("build");
+	if (buildType == null) {
+	    rsp.forwardToPreviousPage(req);
+	    return;
+	}
 
-        BuildType type = BuildType.valueOf(buildType.toUpperCase());
-        String params = req.getParameter("params");
+	BuildType type = BuildType.valueOf(buildType.toUpperCase());
+	String params = req.getParameter("params");
 
-        BulkParamProcessor processor = new BulkParamProcessor(params);
-        Builder builder = new Builder(processor.getProjectParams());
+	BulkParamProcessor processor = new BulkParamProcessor(params);
+	Builder builder = new Builder(processor.getProjectParams());
 
-        switch (type) {
-            case ALL:
-                builder.buildAll();
-                break;
-            case UNSTABLE:
-                builder.buildUnstable();
-                break;
-            case UNSTABLE_ONLY:
-                builder.buildUnstableOnly();
-                break;
-            case FAILED:
-                builder.buildFailed();
-                break;
-            case FAILED_ONLY:
-                builder.buildFailedOnly();
-                break;
-            case NOT_BUILT:
-                builder.buildNotBuilt();
-                break;
-            case NOT_BUILD_ONLY:
-                builder.buildNotBuildOnly();
-                break;
-            case ABORTED:
-                builder.buildAborted();
-                break;
-            case PATTERN:
-                String pattern = req.getParameter("pattern");
-                builder.buildPattern(pattern);
-                BuildHistory history = Hudson.getInstance().getPlugin(BuildHistory.class);
-                history.add(new BuildHistoryItem(pattern));
-                break;
-        }
+	switch (type) {
+	case ALL:
+	    builder.buildAll();
+	    break;
+	case UNSTABLE:
+	    builder.buildUnstable();
+	    break;
+	case UNSTABLE_ONLY:
+	    builder.buildUnstableOnly();
+	    break;
+	case FAILED:
+	    builder.buildFailed();
+	    break;
+	case FAILED_ONLY:
+	    builder.buildFailedOnly();
+	    break;
+	case NOT_BUILT:
+	    builder.buildNotBuilt();
+	    break;
+	case NOT_BUILD_ONLY:
+	    builder.buildNotBuildOnly();
+	    break;
+	case ABORTED:
+	    builder.buildAborted();
+	    break;
+	case PATTERN:
+	    String pattern = req.getParameter("pattern");
+	    builder.buildPattern(pattern);
+	    BuildHistory history = Hudson.getInstance().getPlugin(
+		    BuildHistory.class);
+	    history.add(new BuildHistoryItem(pattern));
+	    break;
+	}
 
-        rsp.forwardToPreviousPage(req);
+	rsp.forwardToPreviousPage(req);
     }
 
     /**
      * Gets the number projects in the build queue
-     *
+     * 
      * @return
      */
     @Exported
     public final int getQueueSize() {
-        return Hudson.getInstance().getQueue().getItems().length;
+	return Hudson.getInstance().getQueue().getItems().length;
     }
 
     /**
      * Gets the build pattern history
-     *
+     * 
      * @return
      */
     @Exported
     public final List<BuildHistoryItem> getHistory() {
-        return Hudson.getInstance().getPlugin(BuildHistory.class).getAll();
+	return Hudson.getInstance().getPlugin(BuildHistory.class).getAll();
     }
 }

@@ -35,42 +35,47 @@ import java.util.logging.Logger;
  */
 public class BulkParamProcessor {
 
-    private static final Logger LOGGER = Logger.getLogger(BulkParamProcessor.class.getName());
+    private static final Logger LOGGER = Logger
+	    .getLogger(BulkParamProcessor.class.getName());
 
     private String rawParams;
 
     public BulkParamProcessor(String params) {
-        this.rawParams = params;
+	this.rawParams = params;
     }
 
     /**
      * Process and return input parameter string
-     *
+     * 
      * @return
      */
     public Map<String, String> getProjectParams() {
-        if (rawParams == null) {
-            return null;
-        }
+	if (rawParams == null) {
+	    return null;
+	}
 
-        StringTokenizer tokeniser = new StringTokenizer(rawParams, "&");
+	StringTokenizer tokeniser = new StringTokenizer(rawParams, "&");
 
-        Map<String, String> values = new HashMap<String, String>(tokeniser.countTokens());
+	Map<String, String> values = new HashMap<String, String>(
+		tokeniser.countTokens());
 
-        while (tokeniser.hasMoreTokens()) {
-            String rawParam = tokeniser.nextToken();
+	while (tokeniser.hasMoreTokens()) {
+	    String rawParam = tokeniser.nextToken();
 
-            String[] split = rawParam.split("=");
-            if (split.length == 2) {
-                values.put(split[0], split[1]);
-                LOGGER.log(Level.INFO, "Added {0}", split);
-            }
-        }
+	    String[] split = rawParam.split("=");
+	    if (split.length == 2) {
+		values.put(split[0], split[1]);
 
-        if (values.isEmpty()) {
-            return null;
-        }
-        
-        return values;
+		if (LOGGER.isLoggable(Level.INFO)) {
+		    LOGGER.log(Level.INFO, "Added {0}", split);
+		}
+	    }
+	}
+
+	if (values.isEmpty()) {
+	    return null;
+	}
+
+	return values;
     }
 }

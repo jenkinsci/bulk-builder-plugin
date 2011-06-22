@@ -36,13 +36,13 @@ public class BuildHistoryItem {
 
     /**
      * Constructor
-     *
+     * 
      * Immutable object
-     *
+     * 
      * @param pattern
      */
     public BuildHistoryItem(String pattern) {
-        this.pattern = pattern;
+	this.pattern = pattern;
     }
 
     /**
@@ -51,16 +51,16 @@ public class BuildHistoryItem {
      * @return
      */
     public final String getPattern() {
-        return pattern;
+	return pattern;
     }
 
     /**
      * toString
-     *
+     * 
      * @return
      */
     @Override
     public final String toString() {
-        return pattern;
+	return pattern;
     }
 }
