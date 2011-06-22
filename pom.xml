@@ -35,7 +35,7 @@ THE SOFTWARE.
     </parent>
 
     <artifactId>bulk-builder</artifactId>
-    <version>1.2-SNAPSHOT</version>
+    <version>1.2</version>
     <packaging>hpi</packaging>
     <name>Bulk Builder</name>
     <description>Trigger multiple builds with ease. Designed for users with many jobs.</description>
