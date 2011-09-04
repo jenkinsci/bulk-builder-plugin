@@ -34,7 +34,7 @@
                     </f:block>
                     <f:block>
                         <f:radioBlock id="byView" title="${%BulkBuilder.buildByView}" name="build" value="byview">
-                            <f:entry help="/plugin/bulk-builder/help/byview-format.html">
+                            <f:entry>
                                 <table style="width: 100%">
                                     <tr>
                                         <td style="width: 15%">
