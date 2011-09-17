@@ -26,6 +26,7 @@ package org.jvnet.hudson.plugins.bulkbuilder.model;
 
 import org.junit.Before;
 import hudson.model.FreeStyleProject;
+import hudson.model.Hudson;
 import org.jvnet.hudson.test.HudsonTestCase;
 import org.junit.Test;
 import org.jvnet.hudson.test.FailureBuilder;
@@ -42,14 +43,23 @@ public class BuilderTest extends HudsonTestCase {
 
     // Successful
     private FreeStyleProject project1;
+    private int project1NextBuildNumber;
+
     // Failure
     private FreeStyleProject project2;
+    private int project2NextBuildNumber;
+
     // Unstable
     private FreeStyleProject project3;
+    private int project3NextBuildNumber;
+
     // Not Built
     private FreeStyleProject project4;
+    private int project4NextBuildNumber;
+
     // Disabled
     private FreeStyleProject project5;
+    private int project5NextBuildNumber;
 
     @Before
     @Override
@@ -72,7 +82,14 @@ public class BuilderTest extends HudsonTestCase {
         project5 = createFreeStyleProject("disabled");
         project5.disable();
 
+        waitUntilQueueEmpty();
         builder = new Builder();
+
+        project1NextBuildNumber = project1.getNextBuildNumber();
+        project2NextBuildNumber = project2.getNextBuildNumber();
+        project3NextBuildNumber = project3.getNextBuildNumber();
+        project4NextBuildNumber = project4.getNextBuildNumber();
+        project5NextBuildNumber = project5.getNextBuildNumber();
     }
 
     /**
@@ -81,6 +98,13 @@ public class BuilderTest extends HudsonTestCase {
     @Test
     public void testBuildAll() {
         assertEquals(4, builder.buildAll());
+        waitUntilQueueEmpty();
+
+        assertEquals(project1NextBuildNumber, project1.getLastBuild().getNumber());
+        assertEquals(project2NextBuildNumber, project2.getLastBuild().getNumber());
+        assertEquals(project3NextBuildNumber, project3.getLastBuild().getNumber());
+        assertEquals(project4NextBuildNumber, project4.getLastBuild().getNumber());
+        assertNull(project5.getLastBuild());
     }
 
     /**
@@ -89,6 +113,13 @@ public class BuilderTest extends HudsonTestCase {
     @Test
     public void testBuildFailed() {
         assertEquals(3, builder.buildFailed());
+        waitUntilQueueEmpty();
+
+        assertEquals(project1NextBuildNumber, project1.getNextBuildNumber());
+        assertEquals(project2NextBuildNumber, project2.getLastBuild().getNumber());
+        assertEquals(project3NextBuildNumber, project3.getLastBuild().getNumber());
+        assertEquals(project4NextBuildNumber, project4.getLastBuild().getNumber());
+        assertNull(project5.getLastBuild());
     }
 
     /**
@@ -96,8 +127,14 @@ public class BuilderTest extends HudsonTestCase {
      */
     @Test
     public void testBuildPattern() {
-        assertEquals(1, builder.buildPattern("stable"));
-        assertEquals(3, builder.buildPattern("l"));
+        assertEquals(2, builder.buildPattern("a"));
+        waitUntilQueueEmpty();
+
+        assertEquals(project1NextBuildNumber, project1.getNextBuildNumber());
+        assertEquals(project2NextBuildNumber, project2.getLastBuild().getNumber());
+        assertEquals(project3NextBuildNumber, project3.getLastBuild().getNumber());
+        assertEquals(project4NextBuildNumber, project4.getNextBuildNumber());
+        assertNull(project5.getLastBuild());
     }
 
     /**
@@ -106,9 +143,13 @@ public class BuilderTest extends HudsonTestCase {
     @Test
     @PresetData(DataSet.ANONYMOUS_READONLY)
     public void testInsufficientBuildPermission() {
-        int buildNumber = project1.getNextBuildNumber();
         assertEquals(1, builder.buildPattern("success"));
-        int nextBuildNumber = project1.getNextBuildNumber();
-        assertEquals(buildNumber, nextBuildNumber);
+        assertEquals(project1NextBuildNumber, project1.getNextBuildNumber());
+    }
+
+    private void waitUntilQueueEmpty() {
+        while(Hudson.getInstance().getQueue().getItems().length > 0) {
+            // wait for jobs to finish...
+        }
     }
 }
