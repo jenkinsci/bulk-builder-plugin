@@ -37,6 +37,7 @@ import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 
+import org.jvnet.hudson.plugins.bulkbuilder.model.BuildAction;
 import org.jvnet.hudson.plugins.bulkbuilder.model.BuildHistory;
 import org.jvnet.hudson.plugins.bulkbuilder.model.BuildHistoryItem;
 import org.jvnet.hudson.plugins.bulkbuilder.model.BuildType;
@@ -76,12 +77,19 @@ public class BulkBuilderAction implements RootAction {
 	    LOGGER.log(Level.FINE, "doBuild action called");
 	}
 
+        String buildAction = req.getParameter("action");
+        if (buildAction == null) {
+            rsp.forwardToPreviousPage(req);
+            return;
+        }
+
 	String buildType = req.getParameter("build");
 	if (buildType == null) {
 	    rsp.forwardToPreviousPage(req);
 	    return;
 	}
 
+        BuildAction action = BuildAction.valueOf(buildAction.toUpperCase());
 	BuildType type = BuildType.valueOf(buildType.toUpperCase());
 	String params = req.getParameter("params");
 
@@ -115,7 +123,7 @@ public class BulkBuilderAction implements RootAction {
 	    String pattern = req.getParameter("pattern");
 	    builder.buildPattern(pattern);
 	    BuildHistory history = Hudson.getInstance().getPlugin(
-		    BuildHistory.class);
+                    BuildHistory.class);
 	    history.add(new BuildHistoryItem(pattern));
 	    break;
 	case UNSTABLE:
@@ -131,7 +139,7 @@ public class BulkBuilderAction implements RootAction {
 
     /**
      * Gets the number projects in the build queue
-     * 
+     *
      * @return
      */
     @Exported
@@ -141,7 +149,7 @@ public class BulkBuilderAction implements RootAction {
 
     /**
      * Gets the build pattern history
-     * 
+     *
      * @return
      */
     @Exported
@@ -151,7 +159,7 @@ public class BulkBuilderAction implements RootAction {
 
     /**
      * Get all available {@link hudson.model.View} for drop down box.
-     * 
+     *
      * @return the views
      */
     public final Collection<View> getViews() {
