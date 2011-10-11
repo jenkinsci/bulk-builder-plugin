@@ -11,10 +11,10 @@
             <f:form name="builder" action="build" method="post">
                 <f:section title="${%BulkBuilder.buildAction}">
                     <f:block>
-                        <f:radioBlock id="immediate_build" title="${%BulkBuilder.actionBuild}" name="action" value="build" checked="true"/>
+                        <f:radioBlock id="immediate_build" title="${%BulkBuilder.actionBuild}" name="action" value="immediate_build" checked="true"/>
                     </f:block>
                     <f:block>
-                        <f:radioBlock id="poll_scm" title="${%BulkBuilder.actionScm}" name="action" value="scm"/>
+                        <f:radioBlock id="poll_scm" title="${%BulkBuilder.actionScm}" name="action" value="poll_scm"/>
                     </f:block>
                 </f:section>
                 <f:section title="${%BulkBuilder.buildSelection}">
