@@ -137,7 +137,7 @@ public class Builder {
             @Override
 	    public boolean apply(AbstractProject<?, ?> project) {
                 AbstractBuild<?, ?> build = project.getLastCompletedBuild();
-		return build == null || build.getResult() == r;
+                return build != null && build.getResult() == r;
 	    }
 	});
 
