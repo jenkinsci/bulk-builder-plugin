@@ -133,7 +133,7 @@ public class BuilderTest extends HudsonTestCase {
         assertEquals(project1NextBuildNumber, project1.getNextBuildNumber());
         assertEquals(project1NextBuildNumber, project2.getNextBuildNumber());
         assertEquals(project3NextBuildNumber, project3.getLastBuild().getNumber());
-        assertEquals(project1NextBuildNumber, project4.getNextBuildNumber());
+        assertEquals(project4NextBuildNumber, project4.getNextBuildNumber());
         assertNull(project5.getLastBuild());
     }
 
