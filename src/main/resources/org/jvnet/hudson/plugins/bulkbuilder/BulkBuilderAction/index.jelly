@@ -60,17 +60,17 @@
                             </table>
                         </f:entry>
                     </f:optionalBlock>
-                    <f:optionalBlock id="byView" title="${%BulkBuilder.buildByView}" name="build" value="byview">
+                    <f:optionalBlock id="View" title="${%BulkBuilder.buildByView}" name="build" value="view">
                         <f:entry>
                             <table style="width: 100%">
                                 <tr>
                                     <td style="width: 15%">
-                                        <label for="byView">${%BulkBuilder.byViewLabel}:</label>
+                                        <label for="view">${%BulkBuilder.byViewLabel}:</label>
                                     </td>
                                     <td>
-                                        <select id="byview" name="byview">
+                                        <select id="view" name="view">
                                             <j:forEach var="view" items="${it.views}">
-                                                <option id="${view.viewName}" name="byview" value="${view.viewName}">
+                                                <option id="${view.viewName}" name="view" value="${view.viewName}">
                                                     ${view.viewName} (${view.getItems().size()})
                                                 </option>
                                             </j:forEach>
