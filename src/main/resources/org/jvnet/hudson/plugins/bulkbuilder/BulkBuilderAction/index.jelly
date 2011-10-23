@@ -96,14 +96,9 @@
                     </f:optionalBlock>
                 </f:section>
                 <f:block>
-                    <input type="submit" name="Submit" value="${%BulkBuilder.buildButton}" id="submit" style="margin-left:5em" />
+                    <f:submit name="Submit" value="${%BulkBuilder.buildButton}" />
                 </f:block>
             </f:form>
-            <script>
-                <![CDATA[
-                makeButton($('submit'),null);
-                ]]>
-            </script>
         </l:main-panel>
     </l:layout>
 </j:jelly>
