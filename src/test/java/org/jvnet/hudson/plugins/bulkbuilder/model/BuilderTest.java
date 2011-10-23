@@ -83,7 +83,7 @@ public class BuilderTest extends HudsonTestCase {
         project5.disable();
 
         waitUntilQueueEmpty();
-        builder = new Builder();
+        builder = new Builder(BuildAction.valueOf("IMMEDIATE_BUILD"));
 
         project1NextBuildNumber = project1.getNextBuildNumber();
         project2NextBuildNumber = project2.getNextBuildNumber();
@@ -93,7 +93,7 @@ public class BuilderTest extends HudsonTestCase {
     }
 
     /**
-     * Test of buildAll method, of class Builder.
+     * Test of buildAll method.
      */
     @Test
     public void testBuildAll() {
@@ -108,7 +108,7 @@ public class BuilderTest extends HudsonTestCase {
     }
 
     /**
-     * Test of buildFailed method, of class Builder.
+     * Test of buildFailed method.
      */
     @Test
     public void testBuildFailed() {
@@ -123,11 +123,27 @@ public class BuilderTest extends HudsonTestCase {
     }
 
     /**
-     * Test of buildPattern method, of class Builder.
+     * Test of buildUnstableOnly method.
+     */
+    @Test
+    public void testBuildUnstableOnly() {
+        assertEquals(1, builder.buildUnstableOnly());
+        waitUntilQueueEmpty();
+
+        assertEquals(project1NextBuildNumber, project1.getNextBuildNumber());
+        assertEquals(project1NextBuildNumber, project2.getNextBuildNumber());
+        assertEquals(project3NextBuildNumber, project3.getLastBuild().getNumber());
+        assertEquals(project1NextBuildNumber, project4.getNextBuildNumber());
+        assertNull(project5.getLastBuild());
+    }
+
+    /**
+     * Test of buildPattern method.
      */
     @Test
     public void testBuildPattern() {
-        assertEquals(2, builder.buildPattern("a"));
+        builder.setPattern("a");
+        assertEquals(2, builder.buildAll());
         waitUntilQueueEmpty();
 
         assertEquals(project1NextBuildNumber, project1.getNextBuildNumber());
@@ -143,7 +159,8 @@ public class BuilderTest extends HudsonTestCase {
     @Test
     @PresetData(DataSet.ANONYMOUS_READONLY)
     public void testInsufficientBuildPermission() {
-        assertEquals(1, builder.buildPattern("success"));
+        builder.setPattern("success");
+        assertEquals(1, builder.buildAll());
         assertEquals(project1NextBuildNumber, project1.getNextBuildNumber());
     }
 
