@@ -237,7 +237,7 @@ public class Builder {
     protected final List<AbstractProject<?, ?>> getProjects(String viewName) {
 
 	List<AbstractProject<?, ?>> projects = new ArrayList<AbstractProject<?, ?>>();
-        Collection<TopLevelItem> items = Hudson.getInstance().getItems();;
+        Collection<TopLevelItem> items = Hudson.getInstance().getItems();
 
         if (viewName != null) {
             View view = Hudson.getInstance().getView(viewName);
