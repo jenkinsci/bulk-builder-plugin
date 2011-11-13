@@ -48,6 +48,7 @@ import java.util.logging.Logger;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
+import java.util.regex.Pattern;
 
 /**
  * @author simon
@@ -155,7 +156,8 @@ public class Builder {
             Predicate<AbstractProject<?, ?>> patternPred = new Predicate<AbstractProject<?, ?>>() {
                 @Override
                 public boolean apply(AbstractProject<?, ?> project) {
-                    return project.getDisplayName().contains(Builder.this.pattern);
+                    String patternReg = Builder.this.pattern.replaceAll("\\*", "\\.\\*");
+                    return Pattern.matches(patternReg, project.getDisplayName());
                 }
             };
             filters.add(patternPred);
