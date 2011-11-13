@@ -78,10 +78,12 @@ public class BulkBuilderActionTest extends HudsonTestCase
         assertEquals("build", form.getActionAttribute());
         assertEquals("post", form.getMethodAttribute());
 
-        // radio group
-        List<HtmlRadioButtonInput> radioButtons = form.getRadioButtonsByName("build");
 
-        assertEquals(10, radioButtons.size());
+        List<HtmlRadioButtonInput> buildActionRadioButtons = form.getRadioButtonsByName("action");
+        assertEquals(2, buildActionRadioButtons.size());
+
+        List<HtmlRadioButtonInput> buildTypeRadioButtons = form.getRadioButtonsByName("build");
+        assertEquals(8, buildTypeRadioButtons.size());
 
         // text box
         form.getInputByName("pattern");

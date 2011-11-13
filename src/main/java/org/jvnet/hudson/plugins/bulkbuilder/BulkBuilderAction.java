@@ -37,6 +37,7 @@ import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 
+import org.jvnet.hudson.plugins.bulkbuilder.model.BuildAction;
 import org.jvnet.hudson.plugins.bulkbuilder.model.BuildHistory;
 import org.jvnet.hudson.plugins.bulkbuilder.model.BuildHistoryItem;
 import org.jvnet.hudson.plugins.bulkbuilder.model.BuildType;
@@ -76,54 +77,65 @@ public class BulkBuilderAction implements RootAction {
 	    LOGGER.log(Level.FINE, "doBuild action called");
 	}
 
+        String buildAction = req.getParameter("action");
+        if (buildAction == null) {
+            rsp.forwardToPreviousPage(req);
+            return;
+        }
+
 	String buildType = req.getParameter("build");
 	if (buildType == null) {
 	    rsp.forwardToPreviousPage(req);
 	    return;
 	}
 
+        BuildAction action = BuildAction.valueOf(buildAction.toUpperCase());
 	BuildType type = BuildType.valueOf(buildType.toUpperCase());
-	String params = req.getParameter("params");
 
-	BulkParamProcessor processor = new BulkParamProcessor(params);
-	Builder builder = new Builder(processor.getProjectParams());
+	// TODO
+        String params = req.getParameter("params");
+        BulkParamProcessor processor = new BulkParamProcessor(params);
+
+        Builder builder = new Builder(action);
+
+        String pattern = req.getParameter("pattern");
+        if (pattern != null && !pattern.isEmpty()) {
+            builder.setPattern(pattern);
+            BuildHistory history = Hudson.getInstance().getPlugin(
+                BuildHistory.class);
+            history.add(new BuildHistoryItem(pattern));
+        }
+
+        String view = req.getParameter("view");
+        if (view != null && !view.isEmpty()) {
+            builder.setView(view);
+        }
 
 	switch (type) {
-	case ABORTED:
-	    builder.buildAborted();
-	    break;
-	case ALL:
-	    builder.buildAll();
-	    break;
-	case BYVIEW:
-	    String viewName = req.getParameter("byview");
-	    builder.buildView(viewName);
-	    break;
-	case FAILED:
-	    builder.buildFailed();
-	    break;
-	case FAILED_ONLY:
-	    builder.buildFailedOnly();
-	    break;
-	case NOT_BUILD_ONLY:
-	    builder.buildNotBuildOnly();
-	    break;
-	case NOT_BUILT:
-	    builder.buildNotBuilt();
-	    break;
-	case PATTERN:
-	    String pattern = req.getParameter("pattern");
-	    builder.buildPattern(pattern);
-	    BuildHistory history = Hudson.getInstance().getPlugin(
-		    BuildHistory.class);
-	    history.add(new BuildHistoryItem(pattern));
-	    break;
-	case UNSTABLE:
-	    builder.buildUnstable();
-	    break;
-	case UNSTABLE_ONLY:
-	    builder.buildUnstableOnly();
-	    break;
+            case ABORTED:
+                builder.buildAborted();
+                break;
+            case ALL:
+                builder.buildAll();
+                break;
+            case FAILED:
+                builder.buildFailed();
+                break;
+            case FAILED_ONLY:
+                builder.buildFailedOnly();
+                break;
+            case NOT_BUILD_ONLY:
+                builder.buildNotBuildOnly();
+                break;
+            case NOT_BUILT:
+                builder.buildNotBuilt();
+                break;
+            case UNSTABLE:
+                builder.buildUnstable();
+                break;
+            case UNSTABLE_ONLY:
+                builder.buildUnstableOnly();
+                break;
 	}
 
 	rsp.forwardToPreviousPage(req);
@@ -131,7 +143,7 @@ public class BulkBuilderAction implements RootAction {
 
     /**
      * Gets the number projects in the build queue
-     * 
+     *
      * @return
      */
     @Exported
@@ -141,7 +153,7 @@ public class BulkBuilderAction implements RootAction {
 
     /**
      * Gets the build pattern history
-     * 
+     *
      * @return
      */
     @Exported
@@ -151,7 +163,7 @@ public class BulkBuilderAction implements RootAction {
 
     /**
      * Get all available {@link hudson.model.View} for drop down box.
-     * 
+     *
      * @return the views
      */
     public final Collection<View> getViews() {
