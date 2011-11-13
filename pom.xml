@@ -35,7 +35,7 @@
   </parent>
 
   <artifactId>bulk-builder</artifactId>
-  <version>1.4</version>
+  <version>1.5-SNAPSHOT</version>
   <packaging>hpi</packaging>
 
   <name>Bulk Builder</name>
