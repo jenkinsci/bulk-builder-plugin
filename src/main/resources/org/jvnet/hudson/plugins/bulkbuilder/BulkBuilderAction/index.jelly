@@ -19,10 +19,10 @@
                 </f:section>
                 <f:section title="${%BulkBuilder.buildSelection}">
                     <f:block>
-                        <f:radioBlock id="all" title="${%BulkBuilder.buildAll}" name="build" value="all"/>
+                        <f:radioBlock id="failed" title="${%BulkBuilder.buildFailed}" name="build" value="failed" checked="true"/>
                     </f:block>
                     <f:block>
-                        <f:radioBlock id="failed" title="${%BulkBuilder.buildFailed}" name="build" value="failed"/>
+                        <f:radioBlock id="all" title="${%BulkBuilder.buildAll}" name="build" value="all"/>
                     </f:block>
                     <f:advanced>
                         <f:block>
