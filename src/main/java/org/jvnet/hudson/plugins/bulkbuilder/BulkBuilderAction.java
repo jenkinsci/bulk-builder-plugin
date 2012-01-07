@@ -57,25 +57,25 @@ import org.kohsuke.stapler.export.ExportedBean;
 public class BulkBuilderAction implements RootAction {
 
     private static final Logger LOGGER = Logger
-	    .getLogger(BulkBuilderAction.class.getName());
+       .getLogger(BulkBuilderAction.class.getName());
 
     public final String getIconFileName() {
-	return "/plugin/bulk-builder/icons/builder-32x32.png";
+        return "/plugin/bulk-builder/icons/builder-32x32.png";
     }
 
     public final String getDisplayName() {
-	return Messages.Plugin_Title();
+    return Messages.Plugin_Title();
     }
 
     public final String getUrlName() {
-	return "/bulkbuilder";
+        return "/bulkbuilder";
     }
 
     public final void doBuild(StaplerRequest req, StaplerResponse rsp)
-	    throws ServletException, IOException {
-	if (LOGGER.isLoggable(Level.FINE)) {
-	    LOGGER.log(Level.FINE, "doBuild action called");
-	}
+        throws ServletException, IOException {
+        if (LOGGER.isLoggable(Level.FINE)) {
+           LOGGER.log(Level.FINE, "doBuild action called");
+        }
 
         String buildAction = req.getParameter("action");
         if (buildAction == null) {
@@ -83,16 +83,16 @@ public class BulkBuilderAction implements RootAction {
             return;
         }
 
-	String buildType = req.getParameter("build");
-	if (buildType == null) {
-	    rsp.forwardToPreviousPage(req);
-	    return;
-	}
+        String buildType = req.getParameter("build");
+        if (buildType == null) {
+            rsp.forwardToPreviousPage(req);
+            return;
+        }
 
         BuildAction action = BuildAction.valueOf(buildAction.toUpperCase());
-	BuildType type = BuildType.valueOf(buildType.toUpperCase());
+        BuildType type = BuildType.valueOf(buildType.toUpperCase());
 
-	// TODO
+        // TODO
         String params = req.getParameter("params");
         BulkParamProcessor processor = new BulkParamProcessor(params);
 
@@ -111,7 +111,7 @@ public class BulkBuilderAction implements RootAction {
             builder.setView(view);
         }
 
-	switch (type) {
+        switch (type) {
             case ABORTED:
                 builder.buildAborted();
                 break;
@@ -136,9 +136,9 @@ public class BulkBuilderAction implements RootAction {
             case UNSTABLE_ONLY:
                 builder.buildUnstableOnly();
                 break;
-	}
+        }
 
-	rsp.forwardToPreviousPage(req);
+        rsp.forwardToPreviousPage(req);
     }
 
     /**
@@ -148,7 +148,7 @@ public class BulkBuilderAction implements RootAction {
      */
     @Exported
     public final int getQueueSize() {
-	return Hudson.getInstance().getQueue().getItems().length;
+        return Hudson.getInstance().getQueue().getItems().length;
     }
 
     /**
@@ -158,7 +158,7 @@ public class BulkBuilderAction implements RootAction {
      */
     @Exported
     public final List<BuildHistoryItem> getHistory() {
-	return Hudson.getInstance().getPlugin(BuildHistory.class).getAll();
+        return Hudson.getInstance().getPlugin(BuildHistory.class).getAll();
     }
 
     /**
@@ -167,6 +167,6 @@ public class BulkBuilderAction implements RootAction {
      * @return the views
      */
     public final Collection<View> getViews() {
-	return Hudson.getInstance().getViews();
+        return Hudson.getInstance().getViews();
     }
 }
