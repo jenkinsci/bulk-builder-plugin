@@ -142,7 +142,7 @@ public class BuilderTest extends HudsonTestCase {
      */
     @Test
     public void testBuildPattern() {
-        builder.setPattern("a");
+        builder.setPattern("*a*");
         assertEquals(2, builder.buildAll());
         waitUntilQueueEmpty();
 
