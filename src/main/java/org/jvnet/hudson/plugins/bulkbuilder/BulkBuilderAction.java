@@ -49,6 +49,8 @@ import org.kohsuke.stapler.export.Exported;
 import org.kohsuke.stapler.export.ExportedBean;
 
 /**
+ * Manage bulk build/SCM poll for your jobs.
+ *
  * @author simon
  * @author <a href="mailto:jieryn@gmail.com">Jesse Farinacci</a>
  */
