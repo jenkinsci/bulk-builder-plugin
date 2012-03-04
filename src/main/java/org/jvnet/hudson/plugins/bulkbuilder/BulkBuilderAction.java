@@ -32,6 +32,7 @@ import hudson.model.View;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -93,18 +94,21 @@ public class BulkBuilderAction implements RootAction {
 
         BuildAction action = BuildAction.valueOf(buildAction.toUpperCase());
         BuildType type = BuildType.valueOf(buildType.toUpperCase());
+        Builder builder = new Builder(action);
 
-        // TODO
         String params = req.getParameter("params");
         BulkParamProcessor processor = new BulkParamProcessor(params);
+        Map<String, String> projectParams = processor.getProjectParams();
 
-        Builder builder = new Builder(action);
+        String paramBuild = req.getParameter("paramBuild");
+        if (paramBuild != null && !paramBuild.isEmpty() && !projectParams.isEmpty()) {
+            builder.setUserParams(projectParams);
+        }
 
         String pattern = req.getParameter("pattern");
         if (pattern != null && !pattern.isEmpty()) {
             builder.setPattern(pattern);
-            BuildHistory history = Hudson.getInstance().getPlugin(
-                BuildHistory.class);
+            BuildHistory history = Hudson.getInstance().getPlugin(BuildHistory.class);
             history.add(new BuildHistoryItem(pattern));
         }
 

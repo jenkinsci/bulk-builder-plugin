@@ -24,9 +24,12 @@
 
 package org.jvnet.hudson.plugins.bulkbuilder.model;
 
+import java.util.Map;
 import org.junit.Before;
 import hudson.model.FreeStyleProject;
 import hudson.model.Hudson;
+import hudson.model.ParametersDefinitionProperty;
+import hudson.model.StringParameterDefinition;
 import org.jvnet.hudson.test.HudsonTestCase;
 import org.junit.Test;
 import org.jvnet.hudson.test.FailureBuilder;
@@ -162,6 +165,23 @@ public class BuilderTest extends HudsonTestCase {
         builder.setPattern("success");
         assertEquals(1, builder.buildAll());
         assertEquals(project1NextBuildNumber, project1.getNextBuildNumber());
+    }
+
+    @Test
+    public void testBuildWithUserSuppliedParameter() throws Exception {
+        FreeStyleProject paramJob = createFreeStyleProject("paramJob");
+        StringParameterDefinition spd = new StringParameterDefinition("foo", "bar");
+        ParametersDefinitionProperty pdp = new ParametersDefinitionProperty(spd);
+        paramJob.addProperty(pdp);
+
+        BulkParamProcessor processor = new BulkParamProcessor("foo=baz");
+        builder.setPattern("paramJob");
+        builder.setUserParams(processor.getProjectParams());
+        assertEquals(1, builder.buildAll());
+        waitUntilNoActivity();
+
+        Map<String, String> buildVariables = paramJob.getLastBuild().getBuildVariables();
+        assertEquals("baz", buildVariables.get("foo"));
     }
 
     private void waitUntilQueueEmpty() {
