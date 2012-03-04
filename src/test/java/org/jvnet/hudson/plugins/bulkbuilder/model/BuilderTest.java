@@ -85,7 +85,7 @@ public class BuilderTest extends HudsonTestCase {
         project5 = createFreeStyleProject("disabled");
         project5.disable();
 
-        waitUntilQueueEmpty();
+        waitUntilNoActivity();
         builder = new Builder(BuildAction.valueOf("IMMEDIATE_BUILD"));
 
         project1NextBuildNumber = project1.getNextBuildNumber();
@@ -99,9 +99,9 @@ public class BuilderTest extends HudsonTestCase {
      * Test of buildAll method.
      */
     @Test
-    public void testBuildAll() {
+    public void testBuildAll() throws Exception {
         assertEquals(4, builder.buildAll());
-        waitUntilQueueEmpty();
+        waitUntilNoActivity();
 
         assertEquals(project1NextBuildNumber, project1.getLastBuild().getNumber());
         assertEquals(project2NextBuildNumber, project2.getLastBuild().getNumber());
@@ -114,9 +114,9 @@ public class BuilderTest extends HudsonTestCase {
      * Test of buildFailed method.
      */
     @Test
-    public void testBuildFailed() {
+    public void testBuildFailed() throws Exception {
         assertEquals(2, builder.buildFailed());
-        waitUntilQueueEmpty();
+        waitUntilNoActivity();
 
         assertEquals(project1NextBuildNumber, project1.getNextBuildNumber());
         assertEquals(project2NextBuildNumber, project2.getLastBuild().getNumber());
@@ -129,9 +129,9 @@ public class BuilderTest extends HudsonTestCase {
      * Test of buildUnstableOnly method.
      */
     @Test
-    public void testBuildUnstableOnly() {
+    public void testBuildUnstableOnly() throws Exception {
         assertEquals(1, builder.buildUnstableOnly());
-        waitUntilQueueEmpty();
+        waitUntilNoActivity();
 
         assertEquals(project1NextBuildNumber, project1.getNextBuildNumber());
         assertEquals(project2NextBuildNumber, project2.getNextBuildNumber());
@@ -144,10 +144,10 @@ public class BuilderTest extends HudsonTestCase {
      * Test of buildPattern method.
      */
     @Test
-    public void testBuildPattern() {
+    public void testBuildPattern() throws Exception {
         builder.setPattern("*a*");
         assertEquals(2, builder.buildAll());
-        waitUntilQueueEmpty();
+        waitUntilNoActivity();
 
         assertEquals(project1NextBuildNumber, project1.getNextBuildNumber());
         assertEquals(project2NextBuildNumber, project2.getLastBuild().getNumber());
@@ -182,11 +182,5 @@ public class BuilderTest extends HudsonTestCase {
 
         Map<String, String> buildVariables = paramJob.getLastBuild().getBuildVariables();
         assertEquals("baz", buildVariables.get("foo"));
-    }
-
-    private void waitUntilQueueEmpty() {
-        while(Hudson.getInstance().getQueue().getItems().length > 0) {
-            // wait for jobs to finish...
-        }
     }
 }
