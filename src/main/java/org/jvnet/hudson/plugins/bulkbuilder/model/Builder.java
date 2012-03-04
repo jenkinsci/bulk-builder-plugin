@@ -319,8 +319,6 @@ public class Builder {
 	    values.add(value);
 	}
 
-	// project.scheduleBuild(1, new Cause.UserCause(), new
-	// ParametersAction(values));
 	Hudson.getInstance().getQueue()
 		.schedule(pp.getOwner(), 1, new ParametersAction(values));
     }
