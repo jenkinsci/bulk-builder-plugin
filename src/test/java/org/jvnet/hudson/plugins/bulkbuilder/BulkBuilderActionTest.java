@@ -109,7 +109,7 @@ public class BulkBuilderActionTest extends HudsonTestCase
 
         // Click that button!
         Page click = submitButton.click();
-//project1.getBuildByNumber(1).getBuildVariables()
+
         assertEquals(2, action.getQueueSize());
     }
 
