@@ -22,8 +22,9 @@
  * THE SOFTWARE.
  */
 
-package org.jvnet.hudson.plugins.bulkbuilder.model;
+package org.jenkinsci.plugins.bulkbuilder.model;
 
+import org.jenkinsci.plugins.bulkbuilder.model.BulkParamProcessor;
 import java.util.HashMap;
 import static org.junit.Assert.*;
 

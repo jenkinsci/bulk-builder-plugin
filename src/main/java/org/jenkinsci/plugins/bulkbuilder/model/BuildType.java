@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2010-2011 Simon Westcott
+ * Copyright (c) 2010-2011 Simon Westcott, Jesse Farinacci
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,63 +22,60 @@
  * THE SOFTWARE.
  */
 
-package org.jvnet.hudson.plugins.bulkbuilder.model;
-
-import hudson.Plugin;
-
-import java.util.LinkedList;
-import java.util.List;
+package org.jenkinsci.plugins.bulkbuilder.model;
 
 /**
  * @author simon
+ * @author <a href="mailto:jieryn@gmail.com">Jesse Farinacci</a>
  */
-public class BuildHistory extends Plugin {
+public enum BuildType {
+    /**
+     * @see {@link hudson.model.Result#ABORTED}
+     */
+    ABORTED,
 
     /**
-     * Size of the history to maintain
+     * @see {@link hudson.model.Hudson#getAllItems(Class)
      */
-    public static final Integer SIZE = 10;
+    ALL,
 
     /**
-     * History list
+     * @see {@link hudson.model.Hudson#getViews()}
      */
-    private LinkedList<BuildHistoryItem> items = new LinkedList<BuildHistoryItem>();
+    BYVIEW,
 
     /**
-     * Add a new pattern, over-writing any previous occurrences
-     * 
-     * @param pattern
+     * @see {@link hudson.model.Result#FAILURE}
      */
-    public final void add(BuildHistoryItem pattern) {
-	items.addFirst(pattern);
-
-	if (items.size() > SIZE) {
-	    items.removeLast();
-	}
-    }
+    FAILED,
 
     /**
-     * Return list of build patterns
-     * 
-     * @return
+     * @see {@link hudson.model.Result#FAILURE}
      */
-    public final List<BuildHistoryItem> getAll() {
-	return items;
-    }
+    FAILED_ONLY,
 
     /**
-     * Return the size of the build history
-     * 
-     * @return
+     *
      */
-    public final int size() {
-	return items.size();
-    }
+    NOT_BUILD_ONLY,
 
     /**
-     * Remove all items from build history
+     *
      */
-    public final void clear() {
-	items.clear();
-    }
+    NOT_BUILT,
+
+    /**
+     *
+     */
+    PATTERN,
+
+    /**
+     * @see {@link hudson.model.Result#UNSTABLE}
+     */
+    UNSTABLE,
+
+    /**
+     * @see {@link hudson.model.Result#UNSTABLE}
+     */
+    UNSTABLE_ONLY
 }

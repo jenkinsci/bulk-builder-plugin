@@ -22,8 +22,9 @@
  * THE SOFTWARE.
  */
 
-package org.jvnet.hudson.plugins.bulkbuilder;
+package org.jenkinsci.plugins.bulkbuilder;
 
+import org.jenkinsci.plugins.bulkbuilder.BulkBuilderAction;
 import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.html.HtmlButton;
 import com.gargoylesoftware.htmlunit.html.HtmlForm;
