@@ -22,14 +22,8 @@
  * THE SOFTWARE.
  */
 
-package org.jenkinsci.plugins.bulkbuilder;
+package org.jvnet.hudson.plugins.bulkbuilder;
 
-import org.jenkinsci.plugins.bulkbuilder.model.BuildAction;
-import org.jenkinsci.plugins.bulkbuilder.model.BuildType;
-import org.jenkinsci.plugins.bulkbuilder.model.BulkParamProcessor;
-import org.jenkinsci.plugins.bulkbuilder.model.Builder;
-import org.jenkinsci.plugins.bulkbuilder.model.BuildHistory;
-import org.jenkinsci.plugins.bulkbuilder.model.BuildHistoryItem;
 import hudson.Extension;
 import hudson.model.Hudson;
 import hudson.model.RootAction;
@@ -41,7 +35,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
-import org.jvnet.hudson.plugins.bulkbuilder.Messages;
+import org.jvnet.hudson.plugins.bulkbuilder.model.*;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 import org.kohsuke.stapler.export.Exported;

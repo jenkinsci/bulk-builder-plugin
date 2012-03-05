@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-package org.jenkinsci.plugins.bulkbuilder.model;
+package org.jvnet.hudson.plugins.bulkbuilder.model;
 
 /**
  * @author simon
@@ -36,9 +36,9 @@ public class BuildHistoryItem {
 
     /**
      * Constructor
-     *
+     * 
      * Immutable object
-     *
+     * 
      * @param pattern
      */
     public BuildHistoryItem(String pattern) {
@@ -47,7 +47,7 @@ public class BuildHistoryItem {
 
     /**
      * Get pattern
-     *
+     * 
      * @return
      */
     public final String getPattern() {
@@ -56,7 +56,7 @@ public class BuildHistoryItem {
 
     /**
      * toString
-     *
+     * 
      * @return
      */
     @Override

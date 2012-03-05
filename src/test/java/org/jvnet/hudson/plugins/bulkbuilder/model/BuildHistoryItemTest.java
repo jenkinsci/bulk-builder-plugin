@@ -22,15 +22,33 @@
  * THE SOFTWARE.
  */
 
-package org.jenkinsci.plugins.bulkbuilder.model;
+package org.jvnet.hudson.plugins.bulkbuilder.model;
+
+import static org.junit.Assert.assertEquals;
+import org.junit.Test;
 
 /**
  * @author simon
  */
-public enum BuildAction {
+public class BuildHistoryItemTest {
 
-    IMMEDIATE_BUILD,
+    private String pattern = "test pattern";
 
-    POLL_SCM,
+    /**
+     * Test getPattern
+     */
+    @Test
+    public void testGetPattern() {
+        BuildHistoryItem item = new BuildHistoryItem(pattern);
+        assertEquals(pattern, item.getPattern());
+    }
 
+    /**
+     * Test toString
+     */
+    @Test
+    public void testToString() {
+        BuildHistoryItem item = new BuildHistoryItem(pattern);
+        assertEquals(pattern, item.toString());
+    }
 }

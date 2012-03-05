@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2010-2011 Simon Westcott, Jesse Farinacci
+ * Copyright (c) 2010-2011 Simon Westcott
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,60 +22,63 @@
  * THE SOFTWARE.
  */
 
-package org.jenkinsci.plugins.bulkbuilder.model;
+package org.jvnet.hudson.plugins.bulkbuilder.model;
+
+import hudson.Plugin;
+
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author simon
- * @author <a href="mailto:jieryn@gmail.com">Jesse Farinacci</a>
  */
-public enum BuildType {
-    /**
-     * @see {@link hudson.model.Result#ABORTED}
-     */
-    ABORTED,
+public class BuildHistory extends Plugin {
 
     /**
-     * @see {@link hudson.model.Hudson#getAllItems(Class)
+     * Size of the history to maintain
      */
-    ALL,
+    public static final Integer SIZE = 10;
 
     /**
-     * @see {@link hudson.model.Hudson#getViews()}
+     * History list
      */
-    BYVIEW,
+    private LinkedList<BuildHistoryItem> items = new LinkedList<BuildHistoryItem>();
 
     /**
-     * @see {@link hudson.model.Result#FAILURE}
+     * Add a new pattern, over-writing any previous occurrences
+     * 
+     * @param pattern
      */
-    FAILED,
+    public final void add(BuildHistoryItem pattern) {
+	items.addFirst(pattern);
+
+	if (items.size() > SIZE) {
+	    items.removeLast();
+	}
+    }
 
     /**
-     * @see {@link hudson.model.Result#FAILURE}
+     * Return list of build patterns
+     * 
+     * @return
      */
-    FAILED_ONLY,
+    public final List<BuildHistoryItem> getAll() {
+	return items;
+    }
 
     /**
-     *
+     * Return the size of the build history
+     * 
+     * @return
      */
-    NOT_BUILD_ONLY,
+    public final int size() {
+	return items.size();
+    }
 
     /**
-     *
+     * Remove all items from build history
      */
-    NOT_BUILT,
-
-    /**
-     *
-     */
-    PATTERN,
-
-    /**
-     * @see {@link hudson.model.Result#UNSTABLE}
-     */
-    UNSTABLE,
-
-    /**
-     * @see {@link hudson.model.Result#UNSTABLE}
-     */
-    UNSTABLE_ONLY
+    public final void clear() {
+	items.clear();
+    }
 }

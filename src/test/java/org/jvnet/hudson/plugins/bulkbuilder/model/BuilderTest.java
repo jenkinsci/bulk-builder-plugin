@@ -22,20 +22,17 @@
  * THE SOFTWARE.
  */
 
-package org.jenkinsci.plugins.bulkbuilder.model;
+package org.jvnet.hudson.plugins.bulkbuilder.model;
 
-import org.jenkinsci.plugins.bulkbuilder.model.BulkParamProcessor;
-import org.jenkinsci.plugins.bulkbuilder.model.BuildAction;
-import org.jenkinsci.plugins.bulkbuilder.model.Builder;
-import hudson.model.FreeStyleProject;
-import hudson.model.ListView;
-import hudson.model.ParametersDefinitionProperty;
-import hudson.model.StringParameterDefinition;
 import java.util.Map;
 import org.junit.Before;
+import hudson.model.FreeStyleProject;
+import hudson.model.Hudson;
+import hudson.model.ParametersDefinitionProperty;
+import hudson.model.StringParameterDefinition;
+import org.jvnet.hudson.test.HudsonTestCase;
 import org.junit.Test;
 import org.jvnet.hudson.test.FailureBuilder;
-import org.jvnet.hudson.test.HudsonTestCase;
 import org.jvnet.hudson.test.UnstableBuilder;
 import org.jvnet.hudson.test.recipes.PresetData;
 import org.jvnet.hudson.test.recipes.PresetData.DataSet;
@@ -185,22 +182,5 @@ public class BuilderTest extends HudsonTestCase {
 
         Map<String, String> buildVariables = paramJob.getLastBuild().getBuildVariables();
         assertEquals("baz", buildVariables.get("foo"));
-    }
-
-    @Test
-    public void testBuildView() throws Exception {
-
-        ListView view = new ListView("test");
-        view.add(project1);
-
-        builder.setView("All");
-        assertEquals(4, builder.buildAll());
-        waitUntilNoActivity();
-
-        assertEquals(project1NextBuildNumber, project1.getLastBuild().getNumber());
-        assertEquals(project2NextBuildNumber, project2.getLastBuild().getNumber());
-        assertEquals(project3NextBuildNumber, project3.getLastBuild().getNumber());
-        assertEquals(project4NextBuildNumber, project4.getLastBuild().getNumber());
-        assertNull(project5.getLastBuild());
     }
 }

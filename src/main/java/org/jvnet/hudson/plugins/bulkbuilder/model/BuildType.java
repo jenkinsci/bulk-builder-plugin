@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2010-2011 Simon Westcott
+ * Copyright (c) 2010-2011 Simon Westcott, Jesse Farinacci
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,34 +22,60 @@
  * THE SOFTWARE.
  */
 
-package org.jenkinsci.plugins.bulkbuilder.model;
-
-import org.jenkinsci.plugins.bulkbuilder.model.BuildHistoryItem;
-import static org.junit.Assert.assertEquals;
-import org.junit.Test;
+package org.jvnet.hudson.plugins.bulkbuilder.model;
 
 /**
  * @author simon
+ * @author <a href="mailto:jieryn@gmail.com">Jesse Farinacci</a>
  */
-public class BuildHistoryItemTest {
-
-    private String pattern = "test pattern";
+public enum BuildType {
+    /**
+     * @see {@link hudson.model.Result#ABORTED}
+     */
+    ABORTED,
 
     /**
-     * Test getPattern
+     * @see {@link hudson.model.Hudson#getAllItems(Class)
      */
-    @Test
-    public void testGetPattern() {
-        BuildHistoryItem item = new BuildHistoryItem(pattern);
-        assertEquals(pattern, item.getPattern());
-    }
+    ALL,
 
     /**
-     * Test toString
+     * @see {@link hudson.model.Hudson#getViews()}
      */
-    @Test
-    public void testToString() {
-        BuildHistoryItem item = new BuildHistoryItem(pattern);
-        assertEquals(pattern, item.toString());
-    }
+    BYVIEW,
+
+    /**
+     * @see {@link hudson.model.Result#FAILURE}
+     */
+    FAILED,
+
+    /**
+     * @see {@link hudson.model.Result#FAILURE}
+     */
+    FAILED_ONLY,
+
+    /**
+     * 
+     */
+    NOT_BUILD_ONLY,
+
+    /**
+     * 
+     */
+    NOT_BUILT,
+
+    /**
+     * 
+     */
+    PATTERN,
+
+    /**
+     * @see {@link hudson.model.Result#UNSTABLE}
+     */
+    UNSTABLE,
+
+    /**
+     * @see {@link hudson.model.Result#UNSTABLE}
+     */
+    UNSTABLE_ONLY
 }
