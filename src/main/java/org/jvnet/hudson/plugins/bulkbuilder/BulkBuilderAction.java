@@ -84,8 +84,17 @@ public class BulkBuilderAction implements RootAction {
             return;
         }
 
-        BuildAction action = BuildAction.valueOf(buildAction.toUpperCase());
-        BuildType type = BuildType.valueOf(buildType.toUpperCase());
+        BuildAction action;
+        BuildType type;
+
+        try {
+            action = BuildAction.valueOf(buildAction.toUpperCase());
+            type = BuildType.valueOf(buildType.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            rsp.forwardToPreviousPage(req);
+            return;
+        }
+
         Builder builder = new Builder(action);
 
         String params = req.getParameter("params");
