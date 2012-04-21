@@ -22,15 +22,32 @@
  * THE SOFTWARE.
  */
 
-package org.jvnet.hudson.plugins.bulkbuilder.model;
+package org.jenkinsci.plugins.bulkbuilder.model;
+
+import hudson.model.FreeStyleProject;
+import org.junit.Test;
+import org.jvnet.hudson.test.HudsonTestCase;
+import org.jvnet.hudson.test.recipes.PresetData;
+import org.jvnet.hudson.test.recipes.PresetData.DataSet;
 
 /**
  * @author simon
  */
-public enum BuildAction {
+public class BuilderTest2 extends HudsonTestCase {
 
-    IMMEDIATE_BUILD,
+    /**
+     * Test user has necessary permission to build job.
+     */
+    @Test
+    @PresetData(DataSet.ANONYMOUS_READONLY)
+    public void testInsufficientBuildPermission() throws Exception {
+        FreeStyleProject project = createFreeStyleProject("restricted");
+        project.scheduleBuild2(0).get();
+        waitUntilNoActivity();
 
-    POLL_SCM,
-
+        Builder builder = new Builder(BuildAction.valueOf("IMMEDIATE_BUILD"));
+        builder.setPattern("restricted");
+        assertEquals(0, builder.buildAll());
+        assertEquals(1, project.getNextBuildNumber());
+    }
 }

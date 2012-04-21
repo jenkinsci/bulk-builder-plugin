@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-package org.jvnet.hudson.plugins.bulkbuilder.model;
+package org.jenkinsci.plugins.bulkbuilder.model;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
@@ -87,8 +87,9 @@ public class Builder {
 
         for (AbstractProject<?, ?> project : targetProjects) {
             LOGGER.log(Level.FINE, "Scheduling build for job '" + project.getDisplayName() + "'");
-            performBuildProject(project);
-            i++;
+            if(performBuildProject(project)) {
+                i++;
+            }
         }
 
         return i;
@@ -252,21 +253,21 @@ public class Builder {
      * @param project
      * @return
      */
-    protected final void performBuildProject(AbstractProject<?, ?> project) {
+    protected final boolean performBuildProject(AbstractProject<?, ?> project) {
 	if (!project.hasPermission(AbstractProject.BUILD)) {
-            LOGGER.log(Level.WARNING, "Insufficient permissions to build " + project.getName());
-	    return;
+            LOGGER.log(Level.WARNING, "Insufficient permission to build job '" + project.getName() + "'");
+	    return false;
 	}
 
         if (action.equals(BuildAction.POLL_SCM)) {
             project.schedulePolling();
-            return;
+            return true;
         }
 
 	// no user parameters provided, just build it
 	if (param == null) {
 	    project.scheduleBuild(new Cause.UserCause());
-	    return;
+	    return true;
 	}
 
 	ParametersDefinitionProperty pp = (ParametersDefinitionProperty) project
@@ -275,7 +276,7 @@ public class Builder {
 	// project does not except any parameters, just build it
 	if (pp == null) {
 	    project.scheduleBuild(new Cause.UserCause());
-	    return;
+	    return true;
 	}
 
 	List<ParameterDefinition> parameterDefinitions = pp
@@ -308,6 +309,7 @@ public class Builder {
 
 	Hudson.getInstance().getQueue()
 		.schedule(pp.getOwner(), 1, new ParametersAction(values));
+        return true;
     }
 
 }

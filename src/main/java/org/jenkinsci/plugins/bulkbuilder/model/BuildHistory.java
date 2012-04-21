@@ -22,10 +22,9 @@
  * THE SOFTWARE.
  */
 
-package org.jvnet.hudson.plugins.bulkbuilder.model;
+package org.jenkinsci.plugins.bulkbuilder.model;
 
 import hudson.Plugin;
-
 import java.util.LinkedList;
 import java.util.List;
 
@@ -37,7 +36,7 @@ public class BuildHistory extends Plugin {
     /**
      * Size of the history to maintain
      */
-    public static final Integer SIZE = 10;
+    public static final int SIZE = 10;
 
     /**
      * History list
@@ -46,7 +45,7 @@ public class BuildHistory extends Plugin {
 
     /**
      * Add a new pattern, over-writing any previous occurrences
-     * 
+     *
      * @param pattern
      */
     public final void add(BuildHistoryItem pattern) {
@@ -59,7 +58,7 @@ public class BuildHistory extends Plugin {
 
     /**
      * Return list of build patterns
-     * 
+     *
      * @return
      */
     public final List<BuildHistoryItem> getAll() {
@@ -68,7 +67,7 @@ public class BuildHistory extends Plugin {
 
     /**
      * Return the size of the build history
-     * 
+     *
      * @return
      */
     public final int size() {

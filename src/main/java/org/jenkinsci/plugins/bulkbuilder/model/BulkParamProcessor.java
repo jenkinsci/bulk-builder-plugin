@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-package org.jvnet.hudson.plugins.bulkbuilder.model;
+package org.jenkinsci.plugins.bulkbuilder.model;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -46,7 +46,7 @@ public class BulkParamProcessor {
 
     /**
      * Process and return input parameter string
-     * 
+     *
      * @return
      */
     public Map<String, String> getProjectParams() {

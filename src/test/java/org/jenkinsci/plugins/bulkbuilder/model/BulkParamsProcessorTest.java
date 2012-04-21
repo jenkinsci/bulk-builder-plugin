@@ -22,13 +22,12 @@
  * THE SOFTWARE.
  */
 
-package org.jvnet.hudson.plugins.bulkbuilder.model;
+package org.jenkinsci.plugins.bulkbuilder.model;
 
 import java.util.HashMap;
-import static org.junit.Assert.*;
-
 import java.util.Map;
-
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import org.junit.Test;
 
 /**

@@ -22,11 +22,12 @@
  * THE SOFTWARE.
  */
 
-package org.jvnet.hudson.plugins.bulkbuilder.model;
+package org.jenkinsci.plugins.bulkbuilder.model;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  * @author simon

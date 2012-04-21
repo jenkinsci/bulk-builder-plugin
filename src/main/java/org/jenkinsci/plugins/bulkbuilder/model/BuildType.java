@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-package org.jvnet.hudson.plugins.bulkbuilder.model;
+package org.jenkinsci.plugins.bulkbuilder.model;
 
 /**
  * @author simon
@@ -55,17 +55,17 @@ public enum BuildType {
     FAILED_ONLY,
 
     /**
-     * 
+     *
      */
     NOT_BUILD_ONLY,
 
     /**
-     * 
+     *
      */
     NOT_BUILT,
 
     /**
-     * 
+     *
      */
     PATTERN,
 

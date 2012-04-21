@@ -22,45 +22,33 @@
  * THE SOFTWARE.
  */
 
-package org.jvnet.hudson.plugins.bulkbuilder.model;
+package org.jenkinsci.plugins.bulkbuilder.model;
+
+import static org.junit.Assert.assertEquals;
+import org.junit.Test;
 
 /**
  * @author simon
  */
-public class BuildHistoryItem {
+public class BuildHistoryItemTest {
+
+    private String pattern = "test pattern";
 
     /**
-     * Build pattern entered by user
+     * Test getPattern
      */
-    private String pattern;
-
-    /**
-     * Constructor
-     * 
-     * Immutable object
-     * 
-     * @param pattern
-     */
-    public BuildHistoryItem(String pattern) {
-	this.pattern = pattern;
+    @Test
+    public void testGetPattern() {
+        BuildHistoryItem item = new BuildHistoryItem(pattern);
+        assertEquals(pattern, item.getPattern());
     }
 
     /**
-     * Get pattern
-     * 
-     * @return
+     * Test toString
      */
-    public final String getPattern() {
-	return pattern;
-    }
-
-    /**
-     * toString
-     * 
-     * @return
-     */
-    @Override
-    public final String toString() {
-	return pattern;
+    @Test
+    public void testToString() {
+        BuildHistoryItem item = new BuildHistoryItem(pattern);
+        assertEquals(pattern, item.toString());
     }
 }

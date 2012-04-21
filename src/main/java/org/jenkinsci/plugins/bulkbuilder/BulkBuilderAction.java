@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-package org.jvnet.hudson.plugins.bulkbuilder;
+package org.jenkinsci.plugins.bulkbuilder;
 
 import hudson.Extension;
 import hudson.model.Hudson;
@@ -35,7 +35,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
-import org.jvnet.hudson.plugins.bulkbuilder.model.*;
+import org.jenkinsci.plugins.bulkbuilder.model.*;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 import org.kohsuke.stapler.export.Exported;
@@ -59,7 +59,7 @@ public class BulkBuilderAction implements RootAction {
     }
 
     public final String getDisplayName() {
-    return Messages.Plugin_Title();
+        return Messages.Plugin_Title();
     }
 
     public final String getUrlName() {
