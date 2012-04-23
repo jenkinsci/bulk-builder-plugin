@@ -172,7 +172,7 @@ public class BuilderTest extends HudsonTestCase {
 //    @Test
     @Ignore("PresetData isn't working correctly")
     @PresetData(DataSet.ANONYMOUS_READONLY)
-    public void insufficientBuildPermission() throws Exception {
+    public void atestInsufficientBuildPermission() throws Exception {
         FreeStyleProject project = createFreeStyleProject("restricted");
         project.scheduleBuild2(0).get();
         waitUntilNoActivity();
@@ -188,7 +188,7 @@ public class BuilderTest extends HudsonTestCase {
      * and uses default value for non-string parameters.
      */
     @Test
-    public void parameterisedBuildWithUserSuppliedParameter() throws Exception {
+    public void testParameterisedBuildWithUserSuppliedParameter() throws Exception {
         FreeStyleProject paramJob = createFreeStyleProject("paramJob");
         StringParameterDefinition spd = new StringParameterDefinition("foo", "bar");
         ParametersDefinitionProperty spdp = new ParametersDefinitionProperty(spd);
@@ -214,7 +214,7 @@ public class BuilderTest extends HudsonTestCase {
      * Test parameterized job uses default value when no parameters specified by user
      */
     @Test
-    public void parameterisedBuildWithNoUserSuppliedParameter() throws Exception {
+    public void testParameterisedBuildWithNoUserSuppliedParameter() throws Exception {
         FreeStyleProject paramJob = createFreeStyleProject("paramJob");
         StringParameterDefinition spd = new StringParameterDefinition("foo", "bar");
         ParametersDefinitionProperty pdp = new ParametersDefinitionProperty(spd);
