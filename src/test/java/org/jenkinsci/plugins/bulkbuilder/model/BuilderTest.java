@@ -24,11 +24,13 @@
 
 package org.jenkinsci.plugins.bulkbuilder.model;
 
+import hudson.model.BooleanParameterDefinition;
 import hudson.model.FreeStyleProject;
 import hudson.model.ParametersDefinitionProperty;
 import hudson.model.StringParameterDefinition;
 import java.util.Map;
-import org.junit.Before;
+import org.junit.After;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.jvnet.hudson.test.FailureBuilder;
 import org.jvnet.hudson.test.HudsonTestCase;
@@ -63,11 +65,16 @@ public class BuilderTest extends HudsonTestCase {
     private FreeStyleProject project5;
     private int project5NextBuildNumber;
 
-    @Before
+    @After
     @Override
-    public void setUp() throws Exception {
-        super.setUp();
+    public void tearDown() throws Exception {
+        super.tearDown();
+        builder = null;
+        project1 = project2 = project3 = project4 = project5 = null;
+        project1NextBuildNumber = project2NextBuildNumber = project3NextBuildNumber = project4NextBuildNumber = project5NextBuildNumber = -1;
+    }
 
+    private void setUpBasicJobs() throws Exception {
         project1 = createFreeStyleProject("success");
         project1.scheduleBuild2(0).get();
 
@@ -99,6 +106,7 @@ public class BuilderTest extends HudsonTestCase {
      */
     @Test
     public void testBuildAll() throws Exception {
+        setUpBasicJobs();
         assertEquals(4, builder.buildAll());
         waitUntilNoActivity();
 
@@ -114,6 +122,7 @@ public class BuilderTest extends HudsonTestCase {
      */
     @Test
     public void testBuildFailed() throws Exception {
+        setUpBasicJobs();
         assertEquals(2, builder.buildFailed());
         waitUntilNoActivity();
 
@@ -129,6 +138,7 @@ public class BuilderTest extends HudsonTestCase {
      */
     @Test
     public void testBuildUnstableOnly() throws Exception {
+        setUpBasicJobs();
         assertEquals(1, builder.buildUnstableOnly());
         waitUntilNoActivity();
 
@@ -144,6 +154,7 @@ public class BuilderTest extends HudsonTestCase {
      */
     @Test
     public void testBuildPattern() throws Exception {
+        setUpBasicJobs();
         builder.setPattern("*a*");
         assertEquals(2, builder.buildAll());
         waitUntilNoActivity();
@@ -159,24 +170,34 @@ public class BuilderTest extends HudsonTestCase {
      * Test user has necessary permission to build job.
      */
 //    @Test
-//    @PresetData(DataSet.NO_ANONYMOUS_READACCESS)
-//    public void testInsufficientBuildPermission() throws Exception {
-//        project1 = createFreeStyleProject("success");
-//        project1.scheduleBuild2(0).get();
-//        waitUntilNoActivity();
-//
-//        builder = new Builder(BuildAction.valueOf("IMMEDIATE_BUILD"));
-//        builder.setPattern("success");
-//        assertEquals(0, builder.buildAll());
-//        assertEquals(project1NextBuildNumber, project1.getNextBuildNumber());
-//    }
+    @Ignore("PresetData isn't working correctly")
+    @PresetData(DataSet.ANONYMOUS_READONLY)
+    public void insufficientBuildPermission() throws Exception {
+        FreeStyleProject project = createFreeStyleProject("restricted");
+        project.scheduleBuild2(0).get();
+        waitUntilNoActivity();
 
+        builder = new Builder(BuildAction.valueOf("IMMEDIATE_BUILD"));
+        builder.setPattern("restricted");
+        assertEquals(0, builder.buildAll());
+        assertEquals(1, project.getNextBuildNumber());
+    }
+
+    /**
+     * Test parameterized job is passed user supplied string parameters
+     * and uses default value for non-string parameters.
+     */
     @Test
-    public void testBuildWithUserSuppliedParameter() throws Exception {
+    public void parameterisedBuildWithUserSuppliedParameter() throws Exception {
         FreeStyleProject paramJob = createFreeStyleProject("paramJob");
         StringParameterDefinition spd = new StringParameterDefinition("foo", "bar");
-        ParametersDefinitionProperty pdp = new ParametersDefinitionProperty(spd);
-        paramJob.addProperty(pdp);
+        ParametersDefinitionProperty spdp = new ParametersDefinitionProperty(spd);
+        paramJob.addProperty(spdp);
+
+        BooleanParameterDefinition bpd = new BooleanParameterDefinition("foo2", true, "Test");
+        ParametersDefinitionProperty bpdp = new ParametersDefinitionProperty(bpd);
+        paramJob.addProperty(bpdp);
+        waitUntilNoActivity();
 
         BulkParamProcessor processor = new BulkParamProcessor("foo=baz");
         builder = new Builder(BuildAction.valueOf("IMMEDIATE_BUILD"));
@@ -187,5 +208,25 @@ public class BuilderTest extends HudsonTestCase {
 
         Map<String, String> buildVariables = paramJob.getLastBuild().getBuildVariables();
         assertEquals("baz", buildVariables.get("foo"));
+    }
+
+    /**
+     * Test parameterized job uses default value when no parameters specified by user
+     */
+    @Test
+    public void parameterisedBuildWithNoUserSuppliedParameter() throws Exception {
+        FreeStyleProject paramJob = createFreeStyleProject("paramJob");
+        StringParameterDefinition spd = new StringParameterDefinition("foo", "bar");
+        ParametersDefinitionProperty pdp = new ParametersDefinitionProperty(spd);
+        paramJob.addProperty(pdp);
+        waitUntilNoActivity();
+
+        builder = new Builder(BuildAction.valueOf("IMMEDIATE_BUILD"));
+        builder.setPattern("paramJob");
+        assertEquals(1, builder.buildAll());
+        waitUntilNoActivity();
+
+        Map<String, String> buildVariables = paramJob.getLastBuild().getBuildVariables();
+        assertEquals("bar", buildVariables.get("foo"));
     }
 }
