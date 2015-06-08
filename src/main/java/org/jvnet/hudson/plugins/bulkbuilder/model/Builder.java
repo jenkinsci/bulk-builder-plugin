@@ -25,6 +25,8 @@
 package org.jvnet.hudson.plugins.bulkbuilder.model;
 
 import hudson.Util;
+import hudson.model.BooleanParameterDefinition;
+import hudson.model.ChoiceParameterDefinition;
 import hudson.model.ParameterValue;
 import hudson.model.Result;
 import hudson.model.TopLevelItem;
@@ -341,26 +343,47 @@ public class Builder {
 
 	for (ParameterDefinition paramDef : parameterDefinitions) {
 
-	    if (!(paramDef instanceof StringParameterDefinition)) {
-		// TODO add support for other parameter types
-		values.add(paramDef.getDefaultParameterValue());
-		continue;
-	    }
-
-	    StringParameterDefinition stringParamDef = (StringParameterDefinition) paramDef;
-	    ParameterValue value;
-
-	    // Did user supply this parameter?
-	    if (userParams.containsKey(paramDef.getName())) {
-		value = stringParamDef.createValue(userParams
-			.get(stringParamDef.getName()));
-	    } else {
-		// No, then use the default value
-		value = stringParamDef.createValue(stringParamDef
-			.getDefaultValue());
-	    }
-
-	    values.add(value);
+		ParameterValue value;
+		if(paramDef instanceof StringParameterDefinition){
+			StringParameterDefinition stringParamDef = (StringParameterDefinition) paramDef;
+			if( userParams.containsKey( paramDef.getName() ) )
+			{
+				value = stringParamDef.createValue( userParams.get( stringParamDef.getName() ) );
+			}
+			else
+			{
+				// No, then use the default value
+				value = stringParamDef.createValue( stringParamDef.getDefaultValue() );
+			}
+		}
+		else if(paramDef instanceof ChoiceParameterDefinition ){
+			ChoiceParameterDefinition choiceParaDef = (ChoiceParameterDefinition)paramDef;
+			if( this.userParams.containsKey( paramDef.getName() ) )
+			{
+				value = choiceParaDef.createValue( this.userParams.get( choiceParaDef.getName() ) );
+			}
+			else
+			{
+				value = choiceParaDef.createValue( choiceParaDef.getDefaultParameterValue().value );
+			}
+		}
+		else if(paramDef instanceof BooleanParameterDefinition ){
+			BooleanParameterDefinition boolParaDef = (BooleanParameterDefinition) paramDef;
+			if( this.userParams.containsKey( paramDef.getName() ) )
+			{
+				value = boolParaDef.createValue( this.userParams.get( boolParaDef.getName() ) );
+			}
+			else
+			{
+				value = boolParaDef.getDefaultParameterValue();
+			}
+		}
+		else
+		{
+			value = paramDef.getDefaultParameterValue();
+		}
+		LOGGER.log(Level.INFO, "Parameter Value = " + value.toString());
+		values.add(value);
 	}
 
 	// project.scheduleBuild(1, new Cause.UserCause(), new
