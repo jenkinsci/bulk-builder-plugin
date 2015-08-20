@@ -25,16 +25,19 @@
 package org.jenkinsci.plugins.bulkbuilder;
 
 import hudson.Extension;
-import hudson.model.Hudson;
 import hudson.model.RootAction;
 import hudson.model.View;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
+
+import hudson.model.ViewGroup;
+import jenkins.model.Jenkins;
 import org.jenkinsci.plugins.bulkbuilder.model.*;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
@@ -109,7 +112,7 @@ public class BulkBuilderAction implements RootAction {
         String pattern = req.getParameter("pattern");
         if (pattern != null && !pattern.isEmpty()) {
             builder.setPattern(pattern);
-            BuildHistory history = Hudson.getInstance().getPlugin(BuildHistory.class);
+            BuildHistory history = Jenkins.getInstance().getPlugin(BuildHistory.class);
             history.add(new BuildHistoryItem(pattern));
         }
 
@@ -155,7 +158,7 @@ public class BulkBuilderAction implements RootAction {
      */
     @Exported
     public final int getQueueSize() {
-        return Hudson.getInstance().getQueue().getItems().length;
+        return Jenkins.getInstance().getQueue().getItems().length;
     }
 
     /**
@@ -165,15 +168,32 @@ public class BulkBuilderAction implements RootAction {
      */
     @Exported
     public final List<BuildHistoryItem> getHistory() {
-        return Hudson.getInstance().getPlugin(BuildHistory.class).getAll();
+        return Jenkins.getInstance().getPlugin(BuildHistory.class).getAll();
     }
 
     /**
-     * Get all available {@link hudson.model.View} for drop down box.
+     * Get all available {@link View} for drop down box, including nested views.
      *
      * @return the views
      */
     public final Collection<View> getViews() {
-        return Hudson.getInstance().getViews();
+        Collection<View> fullList = new ArrayList<View>();
+        Collection<View> parentViews = Jenkins.getInstance().getViews();
+        addViews(fullList, parentViews);
+        return fullList;
+    }
+
+    /**
+     * Recurrent search for all nested views
+     *
+     * @return
+     */
+    private void addViews(Collection<View> fullList, Collection<View> parentViews) {
+        for (View parentView : parentViews) {
+            fullList.add(parentView);
+            if(parentView instanceof ViewGroup) {
+                addViews(fullList, ((ViewGroup) parentView).getViews());
+            }
+        }
     }
 }
