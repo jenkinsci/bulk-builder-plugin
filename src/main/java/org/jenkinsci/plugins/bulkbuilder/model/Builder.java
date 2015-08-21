@@ -30,6 +30,8 @@ import com.google.common.collect.Iterables;
 import hudson.Util;
 import hudson.model.*;
 import jenkins.model.Jenkins;
+import org.jenkinsci.plugins.bulkbuilder.BulkBuilderAction;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -229,9 +231,15 @@ public class Builder {
 
         List<AbstractProject<?, ?>> projects = new ArrayList<AbstractProject<?, ?>>();
         Collection<TopLevelItem> items = Jenkins.getInstance().getItems();
+        View view = null;
+        BulkBuilderAction bulkBuilderAction = new BulkBuilderAction();
 
         if (viewName != null) {
-            View view = Jenkins.getInstance().getView(viewName);
+            for(View currentView : bulkBuilderAction.getViews()) {
+                if(currentView.getViewName().equals(viewName)) {
+                    view = currentView;
+                }
+            }
 
             if (view != null) {
                 items = view.getItems();
