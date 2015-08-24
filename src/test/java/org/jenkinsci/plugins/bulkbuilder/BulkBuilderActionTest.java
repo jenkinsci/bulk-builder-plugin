@@ -24,33 +24,42 @@
 
 package org.jenkinsci.plugins.bulkbuilder;
 
-import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.html.HtmlButton;
 import com.gargoylesoftware.htmlunit.html.HtmlForm;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.html.HtmlRadioButtonInput;
 import hudson.model.Cause;
 import hudson.model.FreeStyleProject;
-import java.io.IOException;
-import java.util.List;
+import hudson.model.ListView;
+import hudson.model.TreeView;
+import jenkins.model.Jenkins;
 import org.junit.Before;
 import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
 import org.jvnet.hudson.test.For;
-import org.jvnet.hudson.test.HudsonTestCase;
+import org.jvnet.hudson.test.JenkinsRule;
+
+import java.io.IOException;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+
 
 /**
  * @author simon
  */
 @For(BulkBuilderAction.class)
-public class BulkBuilderActionTest extends HudsonTestCase
-{
+public class BulkBuilderActionTest {
+    public static final int NO_OF_ACTION_RADIO_BUTTONS = 2;
+    public static final int NO_OF_TYPE_RADIO_BUTTONS = 8;
     private BulkBuilderAction action;
 
+    @Rule
+    public JenkinsRule jenkinsRule = new JenkinsRule();
+
     @Before
-    @Override
     public void setUp() throws Exception {
-        super.setUp();
         action = new BulkBuilderAction();
     }
 
@@ -71,28 +80,24 @@ public class BulkBuilderActionTest extends HudsonTestCase
 
     @Test
     public void testFormElementsPresent() throws Exception {
-        HtmlPage page = new WebClient().goTo("/bulkbuilder");
-
-        // form
+        HtmlPage page = jenkinsRule.createWebClient().goTo("bulkbuilder");
         HtmlForm form = page.getFormByName("builder");
+
         assertEquals("build", form.getActionAttribute());
         assertEquals("post", form.getMethodAttribute());
 
-
         List<HtmlRadioButtonInput> buildActionRadioButtons = form.getRadioButtonsByName("action");
-        assertEquals(2, buildActionRadioButtons.size());
-
+        assertEquals(NO_OF_ACTION_RADIO_BUTTONS, buildActionRadioButtons.size());
         List<HtmlRadioButtonInput> buildTypeRadioButtons = form.getRadioButtonsByName("build");
-        assertEquals(8, buildTypeRadioButtons.size());
+        assertEquals(NO_OF_TYPE_RADIO_BUTTONS, buildTypeRadioButtons.size());
 
-        // text box
         form.getInputByName("pattern");
     }
 
-    @Ignore("HTMLUnit is struggling to find submit button") @Test
-    public void atestFormSubmitBuildAll() throws Exception {
-        HtmlPage page = new WebClient().goTo("/bulkbuilder");
-
+    @Ignore("HTMLUnit is struggling to find submit button")
+    @Test
+    public void testFormSubmitBuildAll() throws Exception {
+        HtmlPage page = jenkinsRule.createWebClient().goTo("bulkbuilder");
         HtmlForm form = page.getFormByName("builder");
 
         List<HtmlRadioButtonInput> radioButtons = form.getRadioButtonsByName("build");
@@ -101,15 +106,11 @@ public class BulkBuilderActionTest extends HudsonTestCase
                 radioButton.setChecked(true);
             }
         }
-
         HtmlButton submitButton = form.getButtonByCaption("Build!");
+        jenkinsRule.createFreeStyleProject("project1");
+        jenkinsRule.createFreeStyleProject("project2");
 
-        FreeStyleProject project1 = createFreeStyleProject("project1");
-        FreeStyleProject project2 = createFreeStyleProject("project2");
-
-        // Click that button!
-        Page click = submitButton.click();
-
+        submitButton.click();
         assertEquals(2, action.getQueueSize());
     }
 
@@ -120,17 +121,29 @@ public class BulkBuilderActionTest extends HudsonTestCase
 
     @Test
     public void testGetQueueSizeWithOneJob() throws IOException {
-        FreeStyleProject project = createFreeStyleProject("project1");
-        project.scheduleBuild(new Cause.UserCause());
+        FreeStyleProject project = jenkinsRule.createFreeStyleProject("project1");
+        project.scheduleBuild(new Cause.UserIdCause());
         assertEquals(1, action.getQueueSize());
     }
 
     @Test
     public void testGetQueueSizeWithTwoJobs() throws IOException {
-        FreeStyleProject project1 = createFreeStyleProject("project1");
-        FreeStyleProject project2 = createFreeStyleProject("project2");
-        project1.scheduleBuild(new Cause.UserCause());
-        project2.scheduleBuild(new Cause.UserCause());
+        FreeStyleProject project1 = jenkinsRule.createFreeStyleProject("project1");
+        FreeStyleProject project2 = jenkinsRule.createFreeStyleProject("project2");
+        project1.scheduleBuild(new Cause.UserIdCause());
+        project2.scheduleBuild(new Cause.UserIdCause());
         assertEquals(2, action.getQueueSize());
+    }
+
+    @Test
+    public void testGetViews() throws IOException {
+        ListView view1 = new ListView("View 1");
+        Jenkins.getInstance().addView(view1);
+        TreeView treeView = new TreeView("tree View");
+        Jenkins.getInstance().addView(treeView);
+        final ListView view2 = new ListView("View 2", treeView);
+        Jenkins.getInstance().addView(view2);
+        // On the view list, "ALL" item is always visible
+        assertEquals(4, action.getViews().size());
     }
 }
