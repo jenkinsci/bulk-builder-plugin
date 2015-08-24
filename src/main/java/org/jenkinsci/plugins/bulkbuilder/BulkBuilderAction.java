@@ -152,7 +152,7 @@ public class BulkBuilderAction implements RootAction {
     }
 
     /**
-     * Gets the number projects in the build queue
+     * Gets the number of projects in the build queue
      *
      * @return
      */
