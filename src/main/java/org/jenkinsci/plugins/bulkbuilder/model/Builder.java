@@ -275,7 +275,7 @@ public class Builder {
 
         // no user parameters provided, just build it
         if (param == null) {
-            project.scheduleBuild(new Cause.UserCause());
+            project.scheduleBuild(new Cause.UserIdCause());
             return true;
         }
 
@@ -284,7 +284,7 @@ public class Builder {
 
         // project does not except any parameters, just build it
         if (pp == null) {
-            project.scheduleBuild(new Cause.UserCause());
+            project.scheduleBuild(new Cause.UserIdCause());
             return true;
         }
 
