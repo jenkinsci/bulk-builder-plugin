@@ -29,6 +29,9 @@ import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
 import hudson.Util;
 import hudson.model.*;
+import jenkins.model.Jenkins;
+import org.jenkinsci.plugins.bulkbuilder.BulkBuilderAction;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -74,7 +77,7 @@ public class Builder {
     /**
      * Build Jenkins projects
      */
-    protected int build(ArrayList filters){
+    protected int build(ArrayList filters) {
         int i = 0;
 
         // Build composite predicate of all build prefs
@@ -87,7 +90,7 @@ public class Builder {
 
         for (AbstractProject<?, ?> project : targetProjects) {
             LOGGER.log(Level.FINE, "Scheduling build for job '" + project.getDisplayName() + "'");
-            if(performBuildProject(project)) {
+            if (performBuildProject(project)) {
                 i++;
             }
         }
@@ -102,11 +105,11 @@ public class Builder {
 
         filters.add(new Predicate<AbstractProject<?, ?>>() {
             @Override
-	    public boolean apply(AbstractProject<?, ?> project) {
+            public boolean apply(AbstractProject<?, ?> project) {
                 AbstractBuild<?, ?> build = project.getLastCompletedBuild();
-		return build == null || build.getResult().isWorseOrEqualTo(r);
-	    }
-	});
+                return build == null || build.getResult().isWorseOrEqualTo(r);
+            }
+        });
 
         filters = addSubFilters(filters);
 
@@ -114,7 +117,7 @@ public class Builder {
 
         LOGGER.log(Level.FINE, "Finished building " + r.toString() + " jobs.");
 
-	return i;
+        return i;
     }
 
     private int buildExactStatus(final Result r) {
@@ -124,11 +127,11 @@ public class Builder {
 
         filters.add(new Predicate<AbstractProject<?, ?>>() {
             @Override
-	    public boolean apply(AbstractProject<?, ?> project) {
+            public boolean apply(AbstractProject<?, ?> project) {
                 AbstractBuild<?, ?> build = project.getLastCompletedBuild();
                 return build != null && build.getResult() == r;
-	    }
-	});
+            }
+        });
 
         filters = addSubFilters(filters);
 
@@ -136,7 +139,7 @@ public class Builder {
 
         LOGGER.log(Level.FINE, "Finished building " + r.toString() + " jobs.");
 
-	return i;
+        return i;
     }
 
     private ArrayList addSubFilters(ArrayList filters) {
@@ -163,60 +166,60 @@ public class Builder {
 
     /**
      * Build all unstable builds.
-     *
+     * <p>
      * This includes projects that are unstable, have not been built before,
      * failed and aborted projects.
      */
     public final int buildUnstable() {
-	return buildWorseOrEqualsTo(Result.UNSTABLE);
+        return buildWorseOrEqualsTo(Result.UNSTABLE);
     }
 
     /**
      * Build all unstable builds only.
      */
     public final int buildUnstableOnly() {
-	return buildExactStatus(Result.UNSTABLE);
+        return buildExactStatus(Result.UNSTABLE);
     }
 
     /**
      * Build failed Jenkins projects.
-     *
+     * <p>
      * This includes projects that have not been built before and failed and
      * aborted projects.
      */
     public final int buildFailed() {
-	return buildWorseOrEqualsTo(Result.FAILURE);
+        return buildWorseOrEqualsTo(Result.FAILURE);
     }
 
     /**
      * Build all failed builds only.
      */
     public int buildFailedOnly() {
-	return buildExactStatus(Result.FAILURE);
+        return buildExactStatus(Result.FAILURE);
     }
 
     /**
      * Build all not built jobs.
-     *
+     * <p>
      * This includes projects that are have not been built before and aborted
      * projects.
      */
     public int buildNotBuilt() {
-	return buildWorseOrEqualsTo(Result.NOT_BUILT);
+        return buildWorseOrEqualsTo(Result.NOT_BUILT);
     }
 
     /**
      * Build all not built jobs only.
      */
     public int buildNotBuildOnly() {
-	return buildExactStatus(Result.NOT_BUILT);
+        return buildExactStatus(Result.NOT_BUILT);
     }
 
     /**
      * Build all aborted builds.
      */
     public int buildAborted() {
-	return buildWorseOrEqualsTo(Result.ABORTED);
+        return buildWorseOrEqualsTo(Result.ABORTED);
     }
 
     /**
@@ -226,11 +229,17 @@ public class Builder {
      */
     protected final List<AbstractProject<?, ?>> getProjects(String viewName) {
 
-	List<AbstractProject<?, ?>> projects = new ArrayList<AbstractProject<?, ?>>();
-        Collection<TopLevelItem> items = Hudson.getInstance().getItems();
+        List<AbstractProject<?, ?>> projects = new ArrayList<AbstractProject<?, ?>>();
+        Collection<TopLevelItem> items = Jenkins.getInstance().getItems();
+        View view = null;
+        BulkBuilderAction bulkBuilderAction = new BulkBuilderAction();
 
         if (viewName != null) {
-            View view = Hudson.getInstance().getView(viewName);
+            for(View currentView : bulkBuilderAction.getViews()) {
+                if(currentView.getViewName().equals(viewName)) {
+                    view = currentView;
+                }
+            }
 
             if (view != null) {
                 items = view.getItems();
@@ -244,7 +253,7 @@ public class Builder {
             projects.add(project);
         }
 
-	return projects;
+        return projects;
     }
 
     /**
@@ -254,61 +263,61 @@ public class Builder {
      * @return
      */
     protected final boolean performBuildProject(AbstractProject<?, ?> project) {
-	if (!project.hasPermission(AbstractProject.BUILD)) {
+        if (!project.hasPermission(AbstractProject.BUILD)) {
             LOGGER.log(Level.WARNING, "Insufficient permission to build job '" + project.getName() + "'");
-	    return false;
-	}
+            return false;
+        }
 
         if (action.equals(BuildAction.POLL_SCM)) {
             project.schedulePolling();
             return true;
         }
 
-	// no user parameters provided, just build it
-	if (param == null) {
-	    project.scheduleBuild(new Cause.UserCause());
-	    return true;
-	}
+        // no user parameters provided, just build it
+        if (param == null) {
+            project.scheduleBuild(new Cause.UserIdCause());
+            return true;
+        }
 
-	ParametersDefinitionProperty pp = (ParametersDefinitionProperty) project
-		.getProperty(ParametersDefinitionProperty.class);
+        ParametersDefinitionProperty pp = (ParametersDefinitionProperty) project
+                .getProperty(ParametersDefinitionProperty.class);
 
-	// project does not except any parameters, just build it
-	if (pp == null) {
-	    project.scheduleBuild(new Cause.UserCause());
-	    return true;
-	}
+        // project does not except any parameters, just build it
+        if (pp == null) {
+            project.scheduleBuild(new Cause.UserIdCause());
+            return true;
+        }
 
-	List<ParameterDefinition> parameterDefinitions = pp
-		.getParameterDefinitions();
-	List<ParameterValue> values = new ArrayList<ParameterValue>();
+        List<ParameterDefinition> parameterDefinitions = pp
+                .getParameterDefinitions();
+        List<ParameterValue> values = new ArrayList<ParameterValue>();
 
-	for (ParameterDefinition paramDef : parameterDefinitions) {
+        for (ParameterDefinition paramDef : parameterDefinitions) {
 
-	    if (!(paramDef instanceof StringParameterDefinition)) {
-		// TODO add support for other parameter types
-		values.add(paramDef.getDefaultParameterValue());
-		continue;
-	    }
+            if (!(paramDef instanceof StringParameterDefinition)) {
+                // TODO add support for other parameter types
+                values.add(paramDef.getDefaultParameterValue());
+                continue;
+            }
 
-	    StringParameterDefinition stringParamDef = (StringParameterDefinition) paramDef;
-	    ParameterValue value;
+            StringParameterDefinition stringParamDef = (StringParameterDefinition) paramDef;
+            ParameterValue value;
 
-	    // Did user supply this parameter?
-	    if (param.containsKey(paramDef.getName())) {
-		value = stringParamDef.createValue(param
-			.get(stringParamDef.getName()));
-	    } else {
-		// No, then use the default value
-		value = stringParamDef.createValue(stringParamDef
-			.getDefaultValue());
-	    }
+            // Did user supply this parameter?
+            if (param.containsKey(paramDef.getName())) {
+                value = stringParamDef.createValue(param
+                        .get(stringParamDef.getName()));
+            } else {
+                // No, then use the default value
+                value = stringParamDef.createValue(stringParamDef
+                        .getDefaultValue());
+            }
 
-	    values.add(value);
-	}
+            values.add(value);
+        }
 
-	Hudson.getInstance().getQueue()
-		.schedule(pp.getOwner(), 1, new ParametersAction(values));
+        Jenkins.getInstance().getQueue()
+                .schedule(pp.getOwner(), 1, new ParametersAction(values));
         return true;
     }
 

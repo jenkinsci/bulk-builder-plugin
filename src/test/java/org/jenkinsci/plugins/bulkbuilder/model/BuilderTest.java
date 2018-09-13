@@ -28,21 +28,28 @@ import hudson.model.BooleanParameterDefinition;
 import hudson.model.FreeStyleProject;
 import hudson.model.ParametersDefinitionProperty;
 import hudson.model.StringParameterDefinition;
-import java.util.Map;
 import org.junit.After;
 import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
 import org.jvnet.hudson.test.FailureBuilder;
-import org.jvnet.hudson.test.HudsonTestCase;
+import org.jvnet.hudson.test.JenkinsRule;
 import org.jvnet.hudson.test.UnstableBuilder;
 import org.jvnet.hudson.test.recipes.PresetData;
 import org.jvnet.hudson.test.recipes.PresetData.DataSet;
 
+import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
 /**
  * @author simon
  */
-public class BuilderTest extends HudsonTestCase {
+public class BuilderTest {
 
+    @Rule
+    public JenkinsRule jenkinsRule = new JenkinsRule();
     private Builder builder;
 
     // Successful
@@ -66,32 +73,30 @@ public class BuilderTest extends HudsonTestCase {
     private int project5NextBuildNumber;
 
     @After
-    @Override
     public void tearDown() throws Exception {
-        super.tearDown();
         builder = null;
         project1 = project2 = project3 = project4 = project5 = null;
         project1NextBuildNumber = project2NextBuildNumber = project3NextBuildNumber = project4NextBuildNumber = project5NextBuildNumber = -1;
     }
 
     private void setUpBasicJobs() throws Exception {
-        project1 = createFreeStyleProject("success");
+        project1 = jenkinsRule.createFreeStyleProject("success");
         project1.scheduleBuild2(0).get();
 
-        project2 = createFreeStyleProject("fail");
+        project2 = jenkinsRule.createFreeStyleProject("fail");
         project2.getBuildersList().add(new FailureBuilder());
         project2.scheduleBuild2(0).get();
 
-        project3 = createFreeStyleProject("unstable");
+        project3 = jenkinsRule.createFreeStyleProject("unstable");
         project3.getBuildersList().add(new UnstableBuilder());
         project3.scheduleBuild2(0).get();
 
-        project4 = createFreeStyleProject("not built");
+        project4 = jenkinsRule.createFreeStyleProject("not built");
 
-        project5 = createFreeStyleProject("disabled");
+        project5 = jenkinsRule.createFreeStyleProject("disabled");
         project5.disable();
 
-        waitUntilNoActivity();
+        jenkinsRule.waitUntilNoActivity();
         builder = new Builder(BuildAction.valueOf("IMMEDIATE_BUILD"));
 
         project1NextBuildNumber = project1.getNextBuildNumber();
@@ -108,7 +113,7 @@ public class BuilderTest extends HudsonTestCase {
     public void testBuildAll() throws Exception {
         setUpBasicJobs();
         assertEquals(4, builder.buildAll());
-        waitUntilNoActivity();
+        jenkinsRule.waitUntilNoActivity();
 
         assertEquals(project1NextBuildNumber, project1.getLastBuild().getNumber());
         assertEquals(project2NextBuildNumber, project2.getLastBuild().getNumber());
@@ -124,7 +129,7 @@ public class BuilderTest extends HudsonTestCase {
     public void testBuildFailed() throws Exception {
         setUpBasicJobs();
         assertEquals(2, builder.buildFailed());
-        waitUntilNoActivity();
+        jenkinsRule.waitUntilNoActivity();
 
         assertEquals(project1NextBuildNumber, project1.getNextBuildNumber());
         assertEquals(project2NextBuildNumber, project2.getLastBuild().getNumber());
@@ -140,7 +145,7 @@ public class BuilderTest extends HudsonTestCase {
     public void testBuildUnstableOnly() throws Exception {
         setUpBasicJobs();
         assertEquals(1, builder.buildUnstableOnly());
-        waitUntilNoActivity();
+        jenkinsRule.waitUntilNoActivity();
 
         assertEquals(project1NextBuildNumber, project1.getNextBuildNumber());
         assertEquals(project2NextBuildNumber, project2.getNextBuildNumber());
@@ -157,7 +162,7 @@ public class BuilderTest extends HudsonTestCase {
         setUpBasicJobs();
         builder.setPattern("*a*");
         assertEquals(2, builder.buildAll());
-        waitUntilNoActivity();
+        jenkinsRule.waitUntilNoActivity();
 
         assertEquals(project1NextBuildNumber, project1.getNextBuildNumber());
         assertEquals(project2NextBuildNumber, project2.getLastBuild().getNumber());
@@ -172,10 +177,10 @@ public class BuilderTest extends HudsonTestCase {
 //    @Test
     @Ignore("PresetData isn't working correctly")
     @PresetData(DataSet.ANONYMOUS_READONLY)
-    public void atestInsufficientBuildPermission() throws Exception {
-        FreeStyleProject project = createFreeStyleProject("restricted");
+    public void testInsufficientBuildPermission() throws Exception {
+        FreeStyleProject project = jenkinsRule.createFreeStyleProject("restricted");
         project.scheduleBuild2(0).get();
-        waitUntilNoActivity();
+        jenkinsRule.waitUntilNoActivity();
 
         builder = new Builder(BuildAction.valueOf("IMMEDIATE_BUILD"));
         builder.setPattern("restricted");
@@ -189,7 +194,7 @@ public class BuilderTest extends HudsonTestCase {
      */
     @Test
     public void testParameterisedBuildWithUserSuppliedParameter() throws Exception {
-        FreeStyleProject paramJob = createFreeStyleProject("paramJob");
+        FreeStyleProject paramJob = jenkinsRule.createFreeStyleProject("paramJob");
         StringParameterDefinition spd = new StringParameterDefinition("foo", "bar");
         ParametersDefinitionProperty spdp = new ParametersDefinitionProperty(spd);
         paramJob.addProperty(spdp);
@@ -197,14 +202,14 @@ public class BuilderTest extends HudsonTestCase {
         BooleanParameterDefinition bpd = new BooleanParameterDefinition("foo2", true, "Test");
         ParametersDefinitionProperty bpdp = new ParametersDefinitionProperty(bpd);
         paramJob.addProperty(bpdp);
-        waitUntilNoActivity();
+        jenkinsRule.waitUntilNoActivity();
 
         BulkParamProcessor processor = new BulkParamProcessor("foo=baz");
         builder = new Builder(BuildAction.valueOf("IMMEDIATE_BUILD"));
         builder.setPattern("paramJob");
         builder.setUserParams(processor.getProjectParams());
         assertEquals(1, builder.buildAll());
-        waitUntilNoActivity();
+        jenkinsRule.waitUntilNoActivity();
 
         Map<String, String> buildVariables = paramJob.getLastBuild().getBuildVariables();
         assertEquals("baz", buildVariables.get("foo"));
@@ -215,16 +220,16 @@ public class BuilderTest extends HudsonTestCase {
      */
     @Test
     public void testParameterisedBuildWithNoUserSuppliedParameter() throws Exception {
-        FreeStyleProject paramJob = createFreeStyleProject("paramJob");
+        FreeStyleProject paramJob = jenkinsRule.createFreeStyleProject("paramJob");
         StringParameterDefinition spd = new StringParameterDefinition("foo", "bar");
         ParametersDefinitionProperty pdp = new ParametersDefinitionProperty(spd);
         paramJob.addProperty(pdp);
-        waitUntilNoActivity();
+        jenkinsRule.waitUntilNoActivity();
 
         builder = new Builder(BuildAction.valueOf("IMMEDIATE_BUILD"));
         builder.setPattern("paramJob");
         assertEquals(1, builder.buildAll());
-        waitUntilNoActivity();
+        jenkinsRule.waitUntilNoActivity();
 
         Map<String, String> buildVariables = paramJob.getLastBuild().getBuildVariables();
         assertEquals("bar", buildVariables.get("foo"));
