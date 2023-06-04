@@ -24,11 +24,11 @@
 
 package org.jenkinsci.plugins.bulkbuilder;
 
-import com.gargoylesoftware.htmlunit.Page;
-import com.gargoylesoftware.htmlunit.html.HtmlButton;
-import com.gargoylesoftware.htmlunit.html.HtmlForm;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import com.gargoylesoftware.htmlunit.html.HtmlRadioButtonInput;
+import org.htmlunit.Page;
+import org.htmlunit.html.HtmlButton;
+import org.htmlunit.html.HtmlForm;
+import org.htmlunit.html.HtmlPage;
+import org.htmlunit.html.HtmlRadioButtonInput;
 import hudson.model.Cause;
 import hudson.model.FreeStyleProject;
 import java.io.IOException;
@@ -97,7 +97,7 @@ public class BulkBuilderActionTest extends HudsonTestCase
 
         List<HtmlRadioButtonInput> radioButtons = form.getRadioButtonsByName("build");
         for (HtmlRadioButtonInput radioButton : radioButtons) {
-            if (radioButton.getValueAttribute().equalsIgnoreCase("all")) {
+            if (radioButton.getValue().equalsIgnoreCase("all")) {
                 radioButton.setChecked(true);
             }
         }
