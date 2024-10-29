@@ -237,7 +237,7 @@ public class Builder {
             }
         }
 
-        for (AbstractProject<?, ?> project : Util.createSubList(items, AbstractProject.class)) {
+         for (Job<?, ?> project : Util.createSubList(items, Job.class)) {
             if (!project.isBuildable()) {
                 continue;
             }
