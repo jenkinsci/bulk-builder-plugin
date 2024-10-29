@@ -55,13 +55,13 @@
   </scm>
 
   <ciManagement>
-    <system>Hudson</system>
-    <url>http://ci.jenkins-ci.org/job/plugins_bulk-builder/</url>
+    <system>CloudBees Jenkins</system>
+    <url>https://jenkins.ci.cloudbees.com/job/plugins/job/bulk-builder-plugin/</url>
   </ciManagement>
 
   <issueManagement>
     <system>JIRA</system>
-    <url>http://issues.jenkins-ci.org/</url>
+    <url>https://issues.jenkins-ci.org/</url>
   </issueManagement>
 
   <developers>
@@ -80,14 +80,14 @@
   <repositories>
       <repository>
           <id>repo.jenkins-ci.org</id>
-          <url>http://repo.jenkins-ci.org/public/</url>
+          <url>https://repo.jenkins-ci.org/public/</url>
       </repository>
   </repositories>
 
   <pluginRepositories>
       <pluginRepository>
           <id>repo.jenkins-ci.org</id>
-          <url>http://repo.jenkins-ci.org/public/</url>
+          <url>https://repo.jenkins-ci.org/public/</url>
       </pluginRepository>
   </pluginRepositories>
 </project>
